@@ -9,17 +9,20 @@ using System.Threading.Tasks;
 namespace ArduinoProject1
 {
     public delegate void MessageReceivedHandler(ArduinoMessage message);
+    public delegate void MessageLoggedHandler(ArduinoMessage message);
 
     public class ArduinoChannel
     {
         private DummySerialPort _port;
         private bool _performClose;
         public event MessageReceivedHandler MessageReceived;
-
+        public Queue<AwaitingMessage> _messageQueue;
+        public event MessageLoggedHandler MessageLogged;
 
         public ArduinoChannel()
         {
             _port = new DummySerialPort(); //TODO: Set correct port here
+            _messageQueue = new Queue<AwaitingMessage>();
         }
 
         public void Open()
@@ -46,8 +49,8 @@ namespace ArduinoProject1
                             //continue if the message is invalid
                             if (!message.IsValid) continue;
 
-                            //send message to listeners
-                            if (MessageReceived != null) MessageReceived(message);
+                            //process the message, either send received handler or continue awaited message
+                            ProcessReceivedMessage(message);
                         }
                     }
                     catch(Exception ex)
@@ -61,18 +64,77 @@ namespace ArduinoProject1
             });
         }
 
+        private void ProcessReceivedMessage(ArduinoMessage message)
+        {
+            LogMessage(message);
+            var pendingResp = _messageQueue.Peek();
+            if (message.Command == pendingResp.ExceptedResponseCommand || message.Command == Command.NACK)
+            {
+                _messageQueue.Dequeue();
+                pendingResp.Action(message);
+            }
+            else if (MessageReceived != null)
+            {
+                MessageReceived(message);
+            }
+        }
+
         public void Close()
         {
             _performClose = true;
             _port.Close();
         }
 
-        public void SendMessage(ArduinoMessage msg)
+        public Task<ArduinoMessage> SendMessageAsync(Command cmd)
         {
-            var bytes = msg.ToBytes();
-            _port.Write(bytes, 0, bytes.Length);
+            return SendMessageAsync(new ArduinoMessage(cmd));
         }
 
+        public Task<ArduinoMessage> SendMessageAsync(Command cmd, Parameter param)
+        {
+            return SendMessageAsync(new ArduinoMessage(cmd, new short[] { (short)param }, DataFormat.PARAMETER));
+        }
 
+        public Task<ArduinoMessage> SendMessageAsync(Command cmd, Parameter param, float value)
+        {
+            return SendMessageAsync(new ArduinoMessage(cmd, DataPackage.ToValueArray(param, value), DataFormat.PARAMETER_AND_VALUE));
+        }
+
+        public Task<ArduinoMessage> SendMessageAsync(ArduinoMessage msg)
+        {
+            LogMessage(msg);
+
+            var bytes = msg.ToBytes();
+            _port.Write(bytes, 0, bytes.Length);
+            
+            var excpectedResponseCmd = Matcher.RequestResponse[msg.Command];
+
+            var tcs = new TaskCompletionSource<ArduinoMessage>();
+            var res = new AwaitingMessage
+            {
+                ExceptedResponseCommand = excpectedResponseCmd,
+                Action = (m) =>
+                {
+                    tcs.TrySetResult(m);
+                }
+            };
+
+            _messageQueue.Enqueue(res);
+
+            return tcs.Task;
+        }
+
+        private void LogMessage(ArduinoMessage msg)
+        {
+            if (MessageLogged != null) MessageLogged(msg);
+        }
     }
+
+    public class AwaitingMessage
+    {
+        public Command ExceptedResponseCommand { get; set; }
+
+        public Action<ArduinoMessage> Action { get; set; }
+    }
+
 }

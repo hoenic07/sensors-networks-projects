@@ -9,9 +9,8 @@ namespace ArduinoProject1
     public enum Command
     {
         REQ_ACK = 102,
-        RES_HEARTBEAT,
         REQ_TEMP = 10,
-        RES_TEMP = 11,
+        RESP_TEMP = 11,
         REQ_X = 20,
         REQ_Y = 21,
         REQ_Z = 22,
@@ -63,7 +62,8 @@ namespace ArduinoProject1
     {
         NO_DATA = 1,
         VALUE = 2,
-        PARAMETER_AND_VALUE =2
+        PARAMETER=3,
+        PARAMETER_AND_VALUE = 4,
     }
 
 }

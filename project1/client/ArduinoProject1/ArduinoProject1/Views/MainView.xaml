@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArduinoProject1.Views"
+        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
-        Title="Arduino Control Board" Height="500" Width="400">
+        Title="Arduino Control Board" Height="500" Width="500">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,12 +14,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!--Connect / Disconnect-->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Width="150" Margin="12,12">Connect</Button>
-            <Button Width="150" Margin="12,12">Disconnect</Button>
+            <Button Width="150" Margin="12,12" cal:Message.Attach="[Event Click]=[Action Connect]">Connect</Button>
+            <Button Width="150" Margin="12,12" cal:Message.Attach="[Event Click]=[Action Disconnect]">Disconnect</Button>
         </StackPanel>
 
         <!--Temperature-->
@@ -43,12 +45,160 @@
                     <Run Text="Min temp."/> <Run Text="{Binding MinMeasuredTemperature}"/> <Run Text="°C"/>
                 </TextBlock>
 
-                <Button Grid.Row="0" Grid.Column="1" Content="Get Current Temp"/>
-                <Button Grid.Row="1" Grid.Column="2" Content="Get Max. Temp"/>
-                <Button Grid.Row="2" Grid.Column="2" Content="Get Min. Temp"/>
-
+                <Button Grid.Row="0" Grid.Column="1" Content="Get Current Temp" cal:Message.Attach="[Event Click]=[Action GetCurrentTemp]"/>
+                <Button Grid.Row="1" Grid.Column="2" Content="Get Max. Temp" cal:Message.Attach="[Event Click]=[Action GetMaxTemp]"/>
+                <Button Grid.Row="2" Grid.Column="2" Content="Get Min. Temp" cal:Message.Attach="[Event Click]=[Action GetMinTemp]"/>
             </Grid>
         </GroupBox>
+
+        <!--Acceleration-->
+        <GroupBox Header="Acceleration" Grid.Row="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0">
+                    <Run Text="X Cur.: "/> <Run Text="{Binding CurrentAccX}"/> <Run Text="g, Max:"/> <Run Text="{Binding MaxAccX}"/> <Run Text="g"/>
+                </TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="0">
+                    <Run Text="Y Cur.: "/> <Run Text="{Binding CurrentAccY}"/> <Run Text="g, Max:"/> <Run Text="{Binding MaxAccY}"/> <Run Text="g"/>
+                </TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="0">
+                    <Run Text="Z Cur.: "/> <Run Text="{Binding CurrentAccZ}"/> <Run Text="g, Max:"/> <Run Text="{Binding MaxAccZ}"/> <Run Text="g"/>
+                </TextBlock>
+
+                <Button Grid.Row="0" Grid.Column="1" cal:Message.Attach="[Event Click]=[Action GetCurrentAccX]">Current X</Button>
+                <Button Grid.Row="1" Grid.Column="1" cal:Message.Attach="[Event Click]=[Action GetCurrentAccY]">Current Y</Button>
+                <Button Grid.Row="2" Grid.Column="1" cal:Message.Attach="[Event Click]=[Action GetCurrentAccZ]">Current Z</Button>
+
+                <Button Grid.Row="0" Grid.Column="2" cal:Message.Attach="[Event Click]=[Action GetMaxAccX]">Max X</Button>
+                <Button Grid.Row="1" Grid.Column="2" cal:Message.Attach="[Event Click]=[Action GetMaxAccY]">Max Y</Button>
+                <Button Grid.Row="2" Grid.Column="2" cal:Message.Attach="[Event Click]=[Action GetMaxAccZ]">Max Z</Button>
+            </Grid>
+        </GroupBox>
+        
+        <!--Automatic Update-->
+        <GroupBox Header="Automatic update" Grid.Row="3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Slider Name="updateIntervalSlider" Grid.Row="0" Grid.Column="0" Minimum="0" Maximum="100" Value="{Binding SelectedSliderInterval, Mode=TwoWay}"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Width="50">
+                    <Run Text="{Binding Value, ElementName=updateIntervalSlider}"/> <Run>sek</Run>
+                </TextBlock>
+                <Button Grid.Row="0" Grid.Column="2" cal:Message.Attach="[Event Click]=[Action SetAutoUpdateIntervalTemp]">Set Temperature Interval</Button>
+                <Slider Grid.Row="1" Grid.Column="0" Name="updateDeltaSlider" Minimum="0" Maximum="30" Value="{Binding SelectedSliderDelta, Mode=TwoWay}"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Width="50">
+                    <Run Text="{Binding Value, ElementName=updateDeltaSlider}"/> <Run>°C</Run>
+                </TextBlock>
+                <Button Grid.Row="1" Grid.Column="2" cal:Message.Attach="[Event Click]=[Action SetAutoUpdateDeltaTemp]">Set Temperature Delta</Button>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Calibration" Grid.Row="4">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding CalibrationValue}"/>
+                <ComboBox Grid.Column="1" SelectedIndex="{Binding SelectedCalibrationMetricIndex, Mode=TwoWay}">
+                    <ComboBoxItem>X -1</ComboBoxItem>
+                    <ComboBoxItem>X +1</ComboBoxItem>
+                    <ComboBoxItem>Y -1</ComboBoxItem>
+                    <ComboBoxItem>Y +1</ComboBoxItem>
+                    <ComboBoxItem>Z -1</ComboBoxItem>
+                    <ComboBoxItem>Z +1</ComboBoxItem>
+                    <ComboBoxItem>Temp</ComboBoxItem>
+                </ComboBox>
+                <Button Grid.Column="2" cal:Message.Attach="[Event Click]=[Action SetCalibration]">Set</Button>
+            </Grid>
+        </GroupBox>
+        
+        <!--Log and Thresholds-->
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!--Log-->
+            <GroupBox Header="Log / Etc.">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Button cal:Message.Attach="[Event Click]=[Action ResetMinMax]">Reset MinMax</Button>
+                    <Button cal:Message.Attach="[Event Click]=[Action ClearLog]" Grid.Row="1">Clear Log</Button>
+                    <ListView ItemsSource="{Binding LogEntries}" Grid.Row="2">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <Run Text="{Binding DateFormat, Mode=OneWay}"/> <Run Text="{Binding Text}"/>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+            </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Column="1" Header="Thresholds">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0">
+                        <Run Text="Max Temp: "/> <Run Text="{Binding MinTempThreshold}"/> <Run Text="°C"/>
+                    </TextBlock>
+                    <TextBlock Grid.Row="1">
+                        <Run Text="Min Temp: "/> <Run Text="{Binding MaxTempThreshold}"/> <Run Text="°C"/>
+                    </TextBlock>
+                    <TextBlock Grid.Row="2">
+                        <Run Text="Delta Temp: "/> <Run Text="{Binding DeltaTempThreshold}"/> <Run Text="°C/s"/>
+                    </TextBlock>
+                    <TextBlock Grid.Row="3">
+                        <Run Text="Max Acc: "/> <Run Text="{Binding TotalAccelerationThreshold}"/> <Run Text="g"/>
+                    </TextBlock>
+                    
+                    <Slider Name="slMinTemp" Minimum="-10" Maximum="50" Value="{Binding MinTempThreshold, Mode=TwoWay}" Grid.Row="0" Grid.Column="1"/>
+                    <Slider Name="slMaxTemp" Minimum="-10" Maximum="50" Value="{Binding MaxTempThreshold, Mode=TwoWay}" Grid.Row="1" Grid.Column="1"/>
+                    <Slider Name="slDeltaTemp" Minimum="5" Maximum="50" Value="{Binding DeltaTempThreshold, Mode=TwoWay}" Grid.Row="2" Grid.Column="1"/>
+                    <Slider Name="slAcc" Minimum="0" Maximum="3" Value="{Binding TotalAccelerationThreshold, Mode=TwoWay}" SmallChange="0.1" LargeChange="0.1" Grid.Row="3" Grid.Column="1"/>
+
+                    <Button cal:Message.Attach="[Event Click]=[Action GetThresholds]" Grid.Row="4">Get</Button>
+                    <Button cal:Message.Attach="[Event Click]=[Action SetThresholds]" Grid.Row="4" Grid.Column="1">Set</Button>
+                </Grid>
+            </GroupBox>
+            
+        </Grid>
 
     </Grid>
 </Window>

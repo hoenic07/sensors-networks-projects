@@ -8,30 +8,30 @@ namespace ArduinoProject1
 {
     public class ArduinoMessage
     {
+        #region Ctor
+
         public ArduinoMessage()
         {
             IsValid = true;
+            Receiver = Receiver.BUS;
         }
 
-        #region Static Method Ctors
-        public static ArduinoMessage AsEmptyMessage(Command cmd)
+        public ArduinoMessage(Command cmd)
+            :base()
         {
-            return new ArduinoMessage
-            {
-                Command = cmd,
-                Format = DataFormat.NO_DATA,
-                Data = new short[0]
-            };
+            Command = cmd;
+            Format = DataFormat.NO_DATA;
+            Data = new short[0];
+            Receiver = Receiver.SENSOR;
         }
 
-        public static ArduinoMessage AsValueMessage(Command cmd, short value)
+        public ArduinoMessage(Command cmd, short[] data, DataFormat format)
+            :base()
         {
-            return new ArduinoMessage
-            {
-                Command = cmd,
-                Format = DataFormat.VALUE,
-                Data = new short[] { value }
-            };
+            Command = cmd;
+            Format = format;
+            Data = data;
+            Receiver = Receiver.SENSOR;
         }
 
         #endregion
@@ -46,6 +46,8 @@ namespace ArduinoProject1
 
         public bool IsValid { get; private set; }
 
+        public Receiver Receiver { get; set; }
+
         #endregion
 
         #region Methods
@@ -55,7 +57,7 @@ namespace ArduinoProject1
             var list = new List<byte> {
                 Constants.MESSAGE_START_BYTE,
                 0, // dummy value, will be replaced below
-                (byte)Receiver.SENSOR,
+                (byte)Receiver,
                 (byte)Command,
                 (byte)Format };
 
