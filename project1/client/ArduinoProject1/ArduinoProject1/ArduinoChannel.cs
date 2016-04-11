@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading.Tasks;
@@ -19,7 +20,6 @@ namespace ArduinoProject1
         public ArduinoChannel()
         {
             _port = new SerialPort("COM3");
-            _port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
             _messageQueue = new Queue<AwaitingMessage>();
         }
 
@@ -34,38 +34,43 @@ namespace ArduinoProject1
             //TODO handle the result in DataReceivedHandler or use a queue? state machine?
             Task.Run(() =>
             {
-                while (!_performClose)
+                ReceiveData();
+            });
+        }
+
+        private void ReceiveData()
+        {
+            while (!_performClose)
+            {
+                try
                 {
-                    try
+                    var incomingValue = _port.ReadByte();
+                    if (incomingValue == Constants.MESSAGE_START_BYTE)
                     {
-                        var incomingValue = _port.ReadByte();
-                        if(incomingValue == Constants.MESSAGE_START_BYTE)
-                        {
-                            //start byte received. construct message
-                            var length = _port.ReadByte();
-                            var messageBytes = new byte[length];
-                            messageBytes[0] = (byte)incomingValue;
-                            messageBytes[1] = (byte)length;
-                            _port.Read(messageBytes, 2, messageBytes.Length - 2);
-                            var message = new ArduinoMessage();
-                            message.FromBytes(messageBytes);
+                        //start byte received. construct message
+                        var length = _port.ReadByte();
+                        var messageBytes = new byte[length];
+                        messageBytes[0] = (byte)incomingValue;
+                        messageBytes[1] = (byte)length;
+                        _port.Read(messageBytes, 2, messageBytes.Length - 2);
+                        var message = new ArduinoMessage();
+                        message.FromBytes(messageBytes);
 
-                            //continue if the message is invalid
-                            if (!message.IsValid) continue;
+                        //continue if the message is invalid
+                        if (!message.IsValid) continue;
 
-                            //process the message, either send received handler or continue awaited message
-                            ProcessReceivedMessage(message);
-                        }
-                    }
-                    catch(Exception ex)
-                    {
-                        Debug.WriteLine("Channel > Exception while receiving data!");
+                        //process the message, either send received handler or continue awaited message
+                        ProcessReceivedMessage(message);
                     }
                 }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Channel > Exception while receiving data!");
+                }
+            }
 
-                //reset close flag
-                _performClose = false;
-            });
+            //reset close flag
+            _performClose = false;
         }
 
         private void ProcessReceivedMessage(ArduinoMessage message)
