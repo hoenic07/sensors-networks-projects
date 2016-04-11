@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Ports;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ArduinoProject1
@@ -13,7 +10,7 @@ namespace ArduinoProject1
 
     public class ArduinoChannel
     {
-        private DummySerialPort _port;
+        private SerialPort _port;
         private bool _performClose;
         public event MessageReceivedHandler MessageReceived;
         public Queue<AwaitingMessage> _messageQueue;
@@ -21,13 +18,20 @@ namespace ArduinoProject1
 
         public ArduinoChannel()
         {
-            _port = new DummySerialPort(); //TODO: Set correct port here
+            _port = new SerialPort("COM3");
+            _port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
             _messageQueue = new Queue<AwaitingMessage>();
         }
 
         public void Open()
         {
+            if (_port.IsOpen)
+            {
+                return;
+            }
             _port.Open();
+
+            //TODO handle the result in DataReceivedHandler or use a queue? state machine?
             Task.Run(() =>
             {
                 while (!_performClose)
@@ -81,8 +85,10 @@ namespace ArduinoProject1
 
         public void Close()
         {
-            _performClose = true;
-            _port.Close();
+            if (_port.IsOpen)
+            {
+                _port.Close();
+            }
         }
 
         public Task<ArduinoMessage> SendMessageAsync(Command cmd)
