@@ -49,7 +49,7 @@ namespace ArduinoProject1
         CALIBRATION_MIN_Y = 15,
         CALIBRATION_MAX_Y = 16,
         CALIBRATION_MIN_Z = 17,
-        CALIBRATION_MAX_Z = 17,
+        CALIBRATION_MAX_Z = 18,
     }
 
     public enum Receiver
@@ -61,9 +61,9 @@ namespace ArduinoProject1
     public enum DataFormat
     {
         NO_DATA = 1,
-        VALUE = 2,
-        PARAMETER=3,
-        PARAMETER_AND_VALUE = 4,
+        VALUE = 2, // e.g. RESP_TEMP
+        PARAMETER =3, // REQ_PARA
+        PARAMETER_AND_VALUE = 4, // RES_PARA
     }
 
 }
