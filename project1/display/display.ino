@@ -1,6 +1,21 @@
 // include the library code:
-#include <SoftwareSerial.h>
+//#include "Instance.h"
+#include "Display.h"
+#include "Input.h"
+#include "Thermometer.h"
+#include "Monitor.h"
+#include "Led.h"
+#include "Bus.h"
 
+Display* display;
+Thermometer* thermometer;
+Input* input;
+Led* led;
+Monitor* monitor;
+Parameters* parameters;
+Accelerometer* accelerometer;
+Bus* bus;
+/*
 #define txPin 2
 #define yellowLedPin 13
 #define redLedTempPin 12
@@ -57,7 +72,7 @@ void backlightOff(){  //turns off the backlight
 void serCommand(){   //a general function to call the command flag for issuing all other commands   
   LCD.write(0xFE);
 }*/
-
+/*
 void showMinTemp() {
     LCD.print("Min: ");
     LCD.print(minTempC, DEC);
@@ -77,10 +92,10 @@ void showCurrentTemp() {
     LCD.print((char)223);
     LCD.print("C");
 }
-
+*/
 void setup()
 {
-  pinMode(txPin, OUTPUT);
+ /* pinMode(txPin, OUTPUT);
   pinMode(yellowLedPin, OUTPUT);
   
   LCD.begin(9600);
@@ -88,10 +103,19 @@ void setup()
   backlightOn();
   
   YLED.begin(9600);
-  RLED_TEMP.begin(9600);
+  RLED_TEMP.begin(9600);*/
+  display = new Display();
+  input = new Input(display);
+  led = new Led();
+  parameters = new Parameters();
+  monitor = new Monitor(led, parameters);
+  thermometer = new Thermometer(display, monitor);
+  accelerometer = new Accelerometer();
+  bus = new Bus();
+  
   Serial.begin(9600);
 }
-
+/*
 void showLine(Line line){
   switch(line) {
     case CUR_TEMP:
@@ -108,12 +132,30 @@ void showLine(Line line){
 
 Line prevTopLine;
 Line topLine = CUR_TEMP;
-
+*/
 void loop()
 {
+
+  //Serial.println("Hello");
+
+ /* if(digitalRead(7)==LOW){
+    Serial.println("pressed");
+  }else{
+    Serial.println("no press");
+  }*/
+
+  bus->receiveBytes();
+
+  thermometer->updateTemperature();
+  input->checkInput();
+  
+  display->update();
+  
+
+  
   //serial port
-  Serial.print("S: ");
-  Serial.write(1);
+  //Serial.print("S: ");
+  /*Serial.write(1);
   bool serialAvailable = Serial.available();
   Serial.println(serialAvailable);
   if(serialAvailable) {
@@ -176,7 +218,7 @@ void loop()
     digitalWrite(redLedTempPin, LOW);
   }
 
+  */
   
-  
-  //delay(1000);
+  delay(1000);
 }
