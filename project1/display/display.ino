@@ -110,7 +110,7 @@ void setup()
   parameters = new Parameters();
   monitor = new Monitor(led, parameters);
   thermometer = new Thermometer(display, monitor);
-  accelerometer = new Accelerometer();
+  accelerometer = new Accelerometer(parameters);
   bus = new Bus();
   
   Serial.begin(9600);
