@@ -45,6 +45,7 @@ namespace ArduinoProject1
                 try
                 {
                     var incomingValue = _port.ReadByte();
+                    Console.WriteLine("Incoming: " + incomingValue);
                     if (incomingValue == Constants.MESSAGE_START_BYTE)
                     {
                         //start byte received. construct message

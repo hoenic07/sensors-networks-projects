@@ -3,7 +3,7 @@
 //TODO: Everything
 
 Bus::Bus(){
-  
+  //Serial.begin(9600);
 }
 
 Bus::~Bus(){

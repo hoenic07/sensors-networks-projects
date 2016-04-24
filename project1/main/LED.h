@@ -5,8 +5,8 @@
 
 class LED {
 public:
-  static const int LED1 = 10; //TODO: Set correct pin here and below
-  static const int LED2 = 11;
+  static const int LED1 = 13; 
+  static const int LED2 = 12;
   void init(){
     pinMode(LED1, OUTPUT);
     pinMode(LED2, OUTPUT);

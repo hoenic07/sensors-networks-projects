@@ -18,6 +18,6 @@ void Input::buttonPressed(){
 }
 
 void Input::rotaryEncoderChanged(){
-  Instance::display->nextDisplay();
+  Instance::display->scroll(1); //TODO dhcnage correct number of lines
 }
 

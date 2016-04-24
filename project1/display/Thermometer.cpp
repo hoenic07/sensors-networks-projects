@@ -5,6 +5,7 @@
 Thermometer::Thermometer(Display* d, Monitor* m){
   display = d;
   monitor = m;
+  curTempDeg = -1;
 }
 
 Thermometer::~Thermometer(){
@@ -37,6 +38,8 @@ void Thermometer::updateTemperature(){
   
     temp = tempDeg1 - (tempDeg1 - tempDeg2)/(v2 - v1) * (tempValue - v1);
   }
+  curTempDeg = temp;
+  
   display->setTemp(temp);
   monitor->updateTemperature(temp);
 
@@ -50,5 +53,9 @@ void Thermometer::sendPeriodically(){
   //double interval = Instance::parameters->TEMP_UPDATE_INTERVAL;
   //double delta = Instance::parameters->TEMP_UPDATE_DELTA;
   //TODO: Send if condition is true
+}
+
+double Thermometer::getTemperature() {
+  return curTempDeg;
 }
 

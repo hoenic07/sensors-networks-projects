@@ -3,7 +3,8 @@
 
 #include <StackArray.h>
 #include "Arduino.h"
-
+#include "Thermometer.h"
+#include "Accelerometer.h"
 
 struct BusMessage{
   byte length;
@@ -14,14 +15,41 @@ struct BusMessage{
 };
 
 
-enum Receiver {
-  NO_REC,
+enum Receiver : byte {
   BUS,
   SENSOR
 };
 
-enum DataFormat {
-  NO_DF,
+enum Command : byte {
+  REQ_ACK,
+  REQ_TEMP,
+  RESP_TEMP,
+  REQ_X,
+  REQ_Y,
+  REQ_Z,
+  REQ_PITCH,
+  REQ_ROLL,
+  REQ_THETA,
+  RESP_X,
+  RESP_Y,
+  RESP_Z,
+  RESP_PITCH,
+  RESP_ROLL,
+  RESP_THETA,
+  REQ_PARA,
+  RESP_PARA,
+  SET_PARA,
+  ALARM_TEMP,
+  ALARM_X,
+  ALARM_Y,
+  ALARM_Z,
+  RESET_MINMAX,
+  ACK,
+  NACK,
+  INVALID
+};
+
+enum DataFormat : byte {
   NO_DATA,
   VALUE,
   PARAMETER, 
@@ -30,7 +58,6 @@ enum DataFormat {
 
 enum Parameter
 {
-  NO_PARAM,
   UPPER_TEMP_THRESHOLD,
   LOWER_TEMP_THRESHOLD,
   TEMP_PER_TIME_THRESHOLD,
@@ -51,43 +78,29 @@ enum Parameter
   CALIBRATION_MAX_Z 
 };
 
-//TODO: Define constants form command, dataFormat, receiver somewhere
-
 class Bus {
 public:
-  Bus();
+  Bus(Thermometer* t, Accelerometer* a);
   ~Bus();
   void sendMessage();
   void receiveBytes();
   void handleReceivedMessage(BusMessage msg);
+  const int MESSAGE_START_BYTE = 0x55;
+  const int MESSAGE_END_BYTE = 0xAA;
 private:
   BusMessage messageFromBytes(byte bytes[]);
   int readByte();
-  byte* messageToBytes(BusMessage msg);
+  void sendBusMessage(BusMessage* msg);
   byte* receivedMessage;
   StackArray<int> receivedMessages;
-
-  const int MESSAGE_START_BYTE = 0x55;
-  const int COMMAND_REQ_ACK = 102;
-  const int COMMAND_REQ_TEMP = 10;
-  const int COMMAND_RESP_TEMP = 11;
-  const int COMMAND_REQ_X = 20;
-  const int COMMAND_REQ_Y = 21;
-  const int COMMAND_REQ_Z = 22;
-  const int COMMAND_RESP_X = 30;
-  const int COMMAND_RESP_Y = 31;
-  const int COMMAND_RESP_Z = 32;
-  const int COMMAND_REQ_PARA = 40;
-  const int COMMAND_RESP_PARA = 41;
-  const int COMMAND_SET_PARA = 42;
-  const int COMMAND_ALARM_TEMP = 50;
-  const int COMMAND_ALARM_X = 60;
-  const int COMMAND_ALARM_Y = 61;
-  const int COMMAND_ALARM_Z = 62;
-  const int COMMAND_RESET_MINMAX = 70;
-  const int COMMAND_ACK = 100;
-  const int COMMAND_NACK = 101;
-  const int COMMAND_INVALID = 103 ;
+  Thermometer* thermometer;
+  Accelerometer* accelerometer;
+  
+  void processReceivedMessage(BusMessage* msg);
+  void sendMessage(Command cmd);
+  void sendMessage(Command cmd, float value, DataFormat format);
+  void sendMessage(Command cmd, Parameter param, float value, DataFormat format);
+  
 };
 
 

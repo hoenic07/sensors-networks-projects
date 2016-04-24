@@ -5,6 +5,7 @@
 
 //<<constructor>>
 Monitor::Monitor(){
+  Instance::led->init();
 }
 
 //<<destructor>>

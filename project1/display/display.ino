@@ -6,6 +6,7 @@
 #include "Monitor.h"
 #include "Led.h"
 #include "Bus.h"
+#include "Accelerometer.h"
 
 Display* display;
 Thermometer* thermometer;
@@ -110,8 +111,8 @@ void setup()
   parameters = new Parameters();
   monitor = new Monitor(led, parameters);
   thermometer = new Thermometer(display, monitor);
-  accelerometer = new Accelerometer(parameters);
-  bus = new Bus();
+  accelerometer = new Accelerometer();
+  bus = new Bus(thermometer, accelerometer);
   
   Serial.begin(9600);
 }
