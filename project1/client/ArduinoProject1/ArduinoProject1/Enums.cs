@@ -8,15 +8,22 @@ namespace ArduinoProject1
 {
     public enum Command
     {
+		//TODO: Change to 1-X with no values left out
         REQ_ACK = 102,
         REQ_TEMP = 10,
         RESP_TEMP = 11,
         REQ_X = 20,
         REQ_Y = 21,
         REQ_Z = 22,
+        REQ_PITCH = 23,
+        REQ_ROLL = 24,
+        REQ_THETA = 25,
         RESP_X = 30,
         RESP_Y = 31,
         RESP_Z = 32,
+        RESP_PITCH = 33,
+        RESP_ROLL = 34,
+        RESP_THETA = 35,
         REQ_PARA = 40,
         RESP_PARA = 41,
         SET_PARA = 42,

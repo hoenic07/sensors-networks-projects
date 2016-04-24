@@ -55,6 +55,7 @@
         <GroupBox Header="Acceleration" Grid.Row="2">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -66,13 +67,13 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0">
-                    <Run Text="X Cur.: "/> <Run Text="{Binding CurrentAccX}"/> <Run Text="g, Max:"/> <Run Text="{Binding MaxAccX}"/> <Run Text="g"/>
+                    <Run Text="X Cur.: "/> <Run Text="{Binding CurrentAccX}"/> <Run Text="g, Max:"/> <Run Text="{Binding MaxAccX}"/> <Run Text="g, Pitch:"/> <Run Text="{Binding Pitch}"/> <Run Text="°"/>
                 </TextBlock>
                 <TextBlock Grid.Row="1" Grid.Column="0">
-                    <Run Text="Y Cur.: "/> <Run Text="{Binding CurrentAccY}"/> <Run Text="g, Max:"/> <Run Text="{Binding MaxAccY}"/> <Run Text="g"/>
+                    <Run Text="Y Cur.: "/> <Run Text="{Binding CurrentAccY}"/> <Run Text="g, Max:"/> <Run Text="{Binding MaxAccY}"/> <Run Text="g, Roll:"/> <Run Text="{Binding Roll}"/> <Run Text="°"/>
                 </TextBlock>
                 <TextBlock Grid.Row="2" Grid.Column="0">
-                    <Run Text="Z Cur.: "/> <Run Text="{Binding CurrentAccZ}"/> <Run Text="g, Max:"/> <Run Text="{Binding MaxAccZ}"/> <Run Text="g"/>
+                    <Run Text="Z Cur.: "/> <Run Text="{Binding CurrentAccZ}"/> <Run Text="g, Max:"/> <Run Text="{Binding MaxAccZ}"/> <Run Text="g, Theta:"/> <Run Text="{Binding Theta}"/> <Run Text="°"/>
                 </TextBlock>
 
                 <Button Grid.Row="0" Grid.Column="1" cal:Message.Attach="[Event Click]=[Action GetCurrentAccX]">Current X</Button>
@@ -82,6 +83,10 @@
                 <Button Grid.Row="0" Grid.Column="2" cal:Message.Attach="[Event Click]=[Action GetMaxAccX]">Max X</Button>
                 <Button Grid.Row="1" Grid.Column="2" cal:Message.Attach="[Event Click]=[Action GetMaxAccY]">Max Y</Button>
                 <Button Grid.Row="2" Grid.Column="2" cal:Message.Attach="[Event Click]=[Action GetMaxAccZ]">Max Z</Button>
+
+                <Button Grid.Row="0" Grid.Column="3" cal:Message.Attach="[Event Click]=[Action GetPitch]">Pitch</Button>
+                <Button Grid.Row="1" Grid.Column="3" cal:Message.Attach="[Event Click]=[Action GetRoll]">Roll</Button>
+                <Button Grid.Row="2" Grid.Column="3" cal:Message.Attach="[Event Click]=[Action GetTheta]">Theta</Button>
             </Grid>
         </GroupBox>
         

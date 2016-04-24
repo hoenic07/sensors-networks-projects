@@ -68,6 +68,30 @@ namespace ArduinoProject1.ViewModels
             set { _currentAccZ = value; NotifyOfPropertyChange(); }
         }
 
+        private double _pitch;
+
+        public double Pitch
+        {
+            get { return _pitch; }
+            set { _pitch = value; NotifyOfPropertyChange(); }
+        }
+
+        private double _roll;
+
+        public double Roll
+        {
+            get { return _roll; }
+            set { _roll = value; NotifyOfPropertyChange(); }
+        }
+
+        private double _theta;
+
+        public double Theta
+        {
+            get { return _theta; }
+            set { _theta = value; NotifyOfPropertyChange(); }
+        }
+        
         private double _maxAccX;
 
         public double MaxAccX
@@ -280,6 +304,24 @@ namespace ArduinoProject1.ViewModels
         {
             var res = await _channel.SendMessageAsync(Command.REQ_PARA, Parameter.MAX_ACC_Z);
             MaxAccZ = DataPackage.GetKeyValuePackage(res).Value;
+        }
+
+        public async void GetPitch()
+        {
+            var res = await _channel.SendMessageAsync(Command.REQ_PITCH);
+            Pitch = DataPackage.GetValue(res);
+        }
+
+        public async void GetRoll()
+        {
+            var res = await _channel.SendMessageAsync(Command.REQ_ROLL);
+            Roll = DataPackage.GetValue(res);
+        }
+
+        public async void GetTheta()
+        {
+            var res = await _channel.SendMessageAsync(Command.REQ_THETA);
+            Theta = DataPackage.GetValue(res);
         }
 
         #endregion
