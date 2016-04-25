@@ -2,16 +2,25 @@
 #include "Arduino.h"
 
 
-Monitor::Monitor(Led* l, Parameters* p, Bus* b, Thermometer* t){
+Monitor::Monitor(Led* l, Parameters* p, Bus* b, Thermometer* t, Accelerometer* a){
   led = l;
   parameters = p;
   bus = b;
   thermometer = t;
+  accelerometer=a;
 }
 
 Monitor::~Monitor(){}
 
-void Monitor::updateAccelerometer(double x, double y, double z) {
+void Monitor::update() {
+  updateAccelerometer();
+  updateTemperature();
+}
+
+void Monitor::updateAccelerometer() {
+  double x = accelerometer->getX();
+  double y = accelerometer->getY();
+  double z = accelerometer->getZ();
   double totalAcc = x * x + y * y + z * z;
   double thr = parameters->getValue(TOTAL_ACC_THRESHOLD);
 

@@ -26,7 +26,7 @@ void setup()
   input = new Input(display, parameters);
   thermometer = new Thermometer(display,parameters);
   bus = new Bus(thermometer,accelerometer, parameters);
-  monitor = new Monitor(led, parameters,bus, thermometer);
+  monitor = new Monitor(led, parameters,bus, thermometer, accelerometer);
 }
 
 void loop()
@@ -35,7 +35,7 @@ void loop()
   accelerometer->update();
   thermometer->updateTemperature();
   thermometer->sendPeriodically();
-  monitor->updateTemperature();
+  monitor->update();
   input->checkInput();
   display->update();
   delay(100);

@@ -181,10 +181,10 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Row="0">
-                        <Run Text="Max Temp: "/> <Run Text="{Binding MinTempThreshold}"/> <Run Text="°C"/>
+                        <Run Text="Min Temp: "/> <Run Text="{Binding MinTempThreshold}"/> <Run Text="°C"/>
                     </TextBlock>
                     <TextBlock Grid.Row="1">
-                        <Run Text="Min Temp: "/> <Run Text="{Binding MaxTempThreshold}"/> <Run Text="°C"/>
+                        <Run Text="Max Temp: "/> <Run Text="{Binding MaxTempThreshold}"/> <Run Text="°C"/>
                     </TextBlock>
                     <TextBlock Grid.Row="2">
                         <Run Text="Delta Temp: "/> <Run Text="{Binding DeltaTempThreshold}"/> <Run Text="°C/s"/>

@@ -8,15 +8,17 @@
 
 class Monitor {
 public:
-  Monitor(Led* l, Parameters* p, Bus* b, Thermometer* t);
+  Monitor(Led* l, Parameters* p, Bus* b, Thermometer* t, Accelerometer* a);
   ~Monitor();
-  void updateTemperature();
-  void updateAccelerometer(double x, double y, double z);
+  void update();
 private:
+  void updateTemperature();
+  void updateAccelerometer();
   Led* led;
   Bus* bus;
   Thermometer* thermometer;
   Parameters* parameters;
+  Accelerometer *accelerometer;
 };
 
 
