@@ -18,14 +18,14 @@ Bus* bus;
 
 void setup()
 {
-  display = new Display();
-  input = new Input(display);
-  led = new Led();
   parameters = new Parameters();
   parameters->setDefaultValues();
+  led = new Led();
+  accelerometer = new Accelerometer(parameters);
+  display = new Display(parameters,accelerometer);
+  input = new Input(display, parameters);
   monitor = new Monitor(led, parameters);
   thermometer = new Thermometer(display, monitor,parameters);
-  accelerometer = new Accelerometer(parameters);
   bus = new Bus(thermometer,accelerometer, parameters);
 }
 
@@ -36,5 +36,5 @@ void loop()
   thermometer->sendPeriodically();
   input->checkInput();
   display->update();
-  delay(1000);
+  delay(100);
 }

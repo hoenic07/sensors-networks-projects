@@ -3,15 +3,20 @@
 
 #include "Arduino.h"
 #include "Display.h"
+#include "Parameters.h"
 
 class Input {
 public:
-  Input(Display* d);
+  Input(Display* d, Parameters* p);
   ~Input();
   void checkInput();
 private:
   int btnPin;
+  int pressCount=0;
+  bool isClosed=false;
+  const int MIN_VALID_PRESS_COUNT=2;
   Display* display;
+  Parameters* parameters;
   void rotaryEncoderChanged();
 };
 
