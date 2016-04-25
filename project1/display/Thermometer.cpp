@@ -58,10 +58,12 @@ void Thermometer::updateTemperature(){
 void Thermometer::sendPeriodically(){
   double interval = parameters->getValue(TEMP_UPDATE_INTERVAL);
   double delta = parameters->getValue(TEMP_UPDATE_DELTA);
+
+  int fq=10; // timer frequency
   
   time++;
   
-  if(time>=interval){
+  if(time>=interval*fq){
     time=0;
     //TODO: Send temp here
   }

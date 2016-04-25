@@ -25,13 +25,13 @@ double Accelerometer::getX(){
 
 //get acceleration on Y-axis
 double Accelerometer::getY(){
-  int val = digitalRead(ACC_X_PIN);
+  int val = analogRead(ACC_Y_PIN);
   return voltToG(val,1);
 }
 
 //get acceleration on Z-axis
 double Accelerometer::getZ(){
-  int val = digitalRead(ACC_X_PIN);
+  int val = analogRead(ACC_Z_PIN);
   return voltToG(val,2);
 }
 
@@ -59,8 +59,8 @@ double Accelerometer::getTheta(){
 double Accelerometer::voltToG(int volt, int axis){
   double minVal = getParameterForAxis(0,axis);
   double maxVal = getParameterForAxis(1,axis);
-  double g = map(volt, minVal, maxVal, -1, 1);
-  return g;
+  double g = map(volt, 662, 355, minVal*1000, maxVal*1000);
+  return g / 1000;
 }
 
 double Accelerometer::getParameterForAxis(int minMax, int axis){

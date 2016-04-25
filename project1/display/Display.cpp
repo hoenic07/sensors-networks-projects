@@ -1,63 +1,106 @@
 #include "Display.h"
-//#include "Instance.h"
-
-Display::Display() {
+Display::Display(Parameters* p, Accelerometer *a) {
+  parameters=p;
+  accelerometer=a;
   curTopLine = CUR_TEMP;
   lcd = new SoftwareSerial(0, 2);
   lcd->begin(9600);
   clearDisplay();
-
-  resetValues();
 }
 
 Display::~Display(){
  
 }
 
-
 void Display::update(){
   lcdPosition(0,0);
   showLine(curTopLine);
   lcdPosition(1,0);
-  showLine(static_cast<Line>(curTopLine + 1));
-}
-
-void Display::resetValues() {
-
-  tempDeg = -1;
-  minTempDeg = 100;
-  maxTempDeg = -100;
+  showLine((Line)(curTopLine + 1));
 }
 
 void Display::scroll(int lines){
-  curTopLine = static_cast<Line>(curTopLine + lines);
   
+  int cLineNumber = (int)curTopLine;
+  if(lines<0 && cLineNumber==0 ||
+     lines>0 && cLineNumber==5) return;
+
+  clearDisplay();
+  curTopLine = (Line)(curTopLine + lines);
 }
 
-
 void  Display::showCurrentTemp() {
+  lcd->print("Temp ");
   lcd->print(tempDeg, DEC);
   lcd->print((char)223); //TODO clear prev value if lower
   lcd->print("C");
 }
 
 void  Display::showMinTemp() {
-  lcd->print("Min: ");
-  lcd->print(minTempDeg, DEC);
+  int minVal = (int)parameters->getValue(MIN_TEMP);
+  lcd->print("Min T: ");
+  lcd->print(minVal, DEC);
   lcd->print((char)223);
   lcd->print("C");
 }
 
 void  Display::showMaxTemp() {
-  lcd->print("Max: ");
-  lcd->print(maxTempDeg, DEC);
+  int maxVal = (int)parameters->getValue(MAX_TEMP);
+  lcd->print("Max T: ");
+  lcd->print(maxVal, DEC);
   lcd->print((char)223);
   lcd->print("C");
 }
 
+void Display::showAccX() {
+  double maxVal = (int)parameters->getValue(MAX_ACC_X);
+  double val = accelerometer->getX();
+  lcd->print("X ");
+  printFloat(val);
+  lcd->print("g Mx ");
+  printFloat(maxVal);
+}
+
+void Display::showAccY() {
+  double maxVal = (int)parameters->getValue(MAX_ACC_Y);
+  double val = accelerometer->getY();
+  lcd->print("Y ");
+  printFloat(val);
+  lcd->print("g Mx ");
+  printFloat(maxVal);
+}
+
+void Display::showAccZ() {
+  double maxVal = (int)parameters->getValue(MAX_ACC_Z);
+  double val = accelerometer->getZ();
+  lcd->print("Z ");
+  printFloat(val);
+  lcd->print("g Mx ");
+  printFloat(maxVal);
+}
+
+void Display::showPitchRoll() {
+  int valP = (int)accelerometer->getPitch();
+  int valR = (int)accelerometer->getRoll();
+  lcd->print("P ");
+  lcd->print(valP, DEC);
+  lcd->print((char)223);
+  lcd->print(" R ");
+  lcd->print(valR, DEC);
+  lcd->print((char)223);
+}
+
+void Display::printFloat(double val){
+  int first=(int)val;
+  int second = (int)((val-first)*100);
+  lcd->print(first, DEC);
+  lcd->print(".");
+  if(second<10)lcd->print("0");
+  lcd->print(second, DEC);
+}
+
 void  Display::showLine(Line line){
-  
-   switch(line) {
+  switch(line) {
     case CUR_TEMP:
       showCurrentTemp();
       break;
@@ -67,19 +110,23 @@ void  Display::showLine(Line line){
     case TEMP_MAX:
       showMaxTemp();
       break;
+    case ACC_X:
+      showAccX();
+      break;
+    case ACC_Y:
+      showAccY();
+      break;
+    case ACC_Z:
+      showAccZ();
+      break;
+    case PITCH_ROLL:
+      showPitchRoll();
+      break;
   }
 }
 
 void Display::setTemp(int degrees) {
-  
   tempDeg = degrees;
-
-  //update min and max temperature
-  if(tempDeg < minTempDeg) {
-    minTempDeg = tempDeg;
-  }else if(tempDeg > maxTempDeg){
-    maxTempDeg = tempDeg; 
-  }
 }
 
 void Display::clearDisplay(){

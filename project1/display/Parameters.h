@@ -24,28 +24,32 @@ enum Parameter
 };
 
 class Parameters { 
+private: 
+    double v[30];
 public:
-  double v[30];
+ void setMinMaxDefaultValues(){
+      v[MAX_TEMP] = 20;
+      v[MIN_TEMP] = 20;
+      v[MAX_ACC_X] = 0;
+      v[MAX_ACC_Y] = 0;
+      v[MAX_ACC_Z] = 0;
+  }
   
   void setDefaultValues(){
       v[UPPER_TEMP_THRESHOLD] = 30;
       v[LOWER_TEMP_THRESHOLD] = 10;
       v[TEMP_PER_TIME_THRESHOLD] = 5;
       v[TOTAL_ACC_THRESHOLD] = 3;
-      v[MAX_TEMP] = 20;
-      v[MIN_TEMP] = 20;
-      v[MAX_ACC_X] = 0;
-      v[MAX_ACC_Y] = 0;
-      v[MAX_ACC_Z] = 0;
       v[TEMP_UPDATE_INTERVAL] = 60;
       v[TEMP_UPDATE_DELTA] = 3;
       v[CALIBRATION_TEMP] = 0;
-      v[CALIBRATION_MIN_X] = 1;
+      v[CALIBRATION_MIN_X] = -1;
       v[CALIBRATION_MAX_X] = 1;
-      v[CALIBRATION_MIN_Y] = 1;
+      v[CALIBRATION_MIN_Y] = -1;
       v[CALIBRATION_MAX_Y] = 1;
-      v[CALIBRATION_MIN_Z] = 1;
+      v[CALIBRATION_MIN_Z] = -1;
       v[CALIBRATION_MAX_Z] = 1;
+      setMinMaxDefaultValues();
   }
 
   void setValue(Parameter p, double value){

@@ -1,7 +1,8 @@
 #include "Input.h"
 
-Input::Input(Display* d){
+Input::Input(Display* d, Parameters* p){
   display = d;
+  parameters = p;
   btnPin = 7;
 }
 
@@ -10,9 +11,15 @@ Input::~Input(){
 }
 
 void Input::checkInput(){
-  //TODO: Debounce button ...
   if(digitalRead(btnPin)==LOW){
-    display->resetValues();
+    //display->scroll(1);
+    pressCount++;
+  }
+  else{
+    if(pressCount>=MIN_VALID_PRESS_COUNT){
+      display->scroll(1);
+    }
+    pressCount=0;
   }
 }
 
