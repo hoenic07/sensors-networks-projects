@@ -29,11 +29,16 @@ void Monitor::updateTemperature() {
   double maxTemp = parameters->getValue(UPPER_TEMP_THRESHOLD);
   double minTemp = parameters->getValue(LOWER_TEMP_THRESHOLD);
   double dTThr = parameters->getValue(TEMP_PER_TIME_THRESHOLD);
-  if(temp > maxTemp || temp < minTemp){ //TODO: Check dT/dt threshold
+
+  //TODO: Check dT/dt threshold
+  
+  if(temp > maxTemp){
     led->on(Led::LED2);
-    bus->sendMessage(ALARM_TEMP);
-  }
-  else{
+    bus->sendMessage(ALARM_TEMP_MAX);
+  }else if(temp < minTemp){
+    led->on(Led::LED2);
+    bus->sendMessage(ALARM_TEMP_MIN);
+  }else{
     led->off(Led::LED2);
   }
 }

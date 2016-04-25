@@ -26,12 +26,14 @@ namespace ArduinoProject1
         REQ_PARA = 15,
         RESP_PARA = 16,
         SET_PARA = 17,
-        ALARM_TEMP = 18,
-        ALARM_ACC = 19,
-        RESET_MINMAX = 20,
-        ACK = 21,
-        NACK = 22,
-        INVALID = 23 // will not be sent or received from sensor. Just used when message has invalid start/end bytes or invalid length.
+        ALARM_TEMP_MIN = 18,
+        ALARM_TEMP_MAX = 19,
+        ALARM_TEMP_DT = 20,
+        ALARM_ACC = 21,
+        RESET_MINMAX = 22,
+        ACK = 23,
+        NACK = 24,
+        INVALID = 25 // will not be sent or received from sensor. Just used when message has invalid start/end bytes or invalid length.
     }
 
     public enum Parameter

@@ -40,8 +40,10 @@ enum Command : byte {
   REQ_PARA, //15
   RESP_PARA,
   SET_PARA,
-  ALARM_TEMP,
-  ALARM_ACC, //20
+  ALARM_TEMP_MIN,
+  ALARM_TEMP_MAX,
+  ALARM_TEMP_DT,//20
+  ALARM_ACC, 
   RESET_MINMAX,
   ACK,
   NACK,
