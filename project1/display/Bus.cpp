@@ -108,11 +108,14 @@ void Bus::processReceivedMessage(BusMessage* msg) {
         Parameter p = (Parameter)msg->data[0];
         double val = parameters->getValue(p);
         sendMessage(RESP_PARA, p, val, PARAMETER_AND_VALUE);
+        break;
       }
       case SET_PARA: {
         Parameter p = (Parameter)msg->data[0];
         double value = msg->data[1] / 100.0;
         parameters->setValue(p, value);
+        sendMessage(ACK);
+        break;
       }
       //default: no need to handle other cases
     }
