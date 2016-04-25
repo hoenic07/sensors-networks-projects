@@ -8,7 +8,7 @@ namespace ArduinoProject1
 {
     public class DataPackage
     {
-        public static float GetValue(ArduinoMessage msg)
+        public static double GetValue(ArduinoMessage msg)
         {
             var data = msg.Data;
             if (data == null || data.Length != 1) throw new ArgumentException("Input array must have exactly one value!");
@@ -20,7 +20,7 @@ namespace ArduinoProject1
             var data = msg.Data;
             if (data == null || data.Length != 2) throw new ArgumentException("Input array must have exactly two values!");
             var para = (Parameter)data[0];
-            var value = ShortToFloat(data[1]);
+            var value = (float)ShortToFloat(data[1]);
             return new KeyValuePackage { Parameter = para, Value = value };
         }
 
@@ -29,9 +29,9 @@ namespace ArduinoProject1
             return new short[] { (short)param, FloatToShort(value) };
         }
 
-        private static float ShortToFloat(short value)
+        private static double ShortToFloat(short value)
         {
-            return value / 100f;
+            return Math.Round(value / 100f, 2);
         }
 
         private static short FloatToShort(float value)

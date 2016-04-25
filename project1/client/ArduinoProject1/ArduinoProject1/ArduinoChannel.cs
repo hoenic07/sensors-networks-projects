@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ArduinoProject1
 {
@@ -29,7 +30,15 @@ namespace ArduinoProject1
             {
                 return;
             }
-            _port.Open();
+
+            try
+            {
+                _port.Open();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Couldn't connect! Maybe the Arduino Serial Monitor is open?");
+            }
 
             //TODO handle the result in DataReceivedHandler or use a queue? state machine?
             Task.Run(() =>
@@ -38,36 +47,49 @@ namespace ArduinoProject1
             });
         }
 
-        private void ReceiveData()
+        private async void ReceiveData()
         {
             while (!_performClose)
             {
                 try
                 {
                     var incomingValue = _port.ReadByte();
-                    Console.WriteLine("Incoming: " + incomingValue);
+                    Console.WriteLine("Channel > Incoming: " + incomingValue);
                     if (incomingValue == Constants.MESSAGE_START_BYTE)
                     {
                         //start byte received. construct message
                         var length = _port.ReadByte();
+                        await Task.Delay(10);
                         var messageBytes = new byte[length];
                         messageBytes[0] = (byte)incomingValue;
                         messageBytes[1] = (byte)length;
+                        await Task.Delay(10);
                         _port.Read(messageBytes, 2, messageBytes.Length - 2);
                         var message = new ArduinoMessage();
                         message.FromBytes(messageBytes);
 
                         //continue if the message is invalid
-                        if (!message.IsValid) continue;
+                        if (!message.IsValid)
+                        {
+                            Console.WriteLine("Channel > Received INVALID Message!");
+                            continue;
+                        }
 
                         //process the message, either send received handler or continue awaited message
                         ProcessReceivedMessage(message);
                     }
                 }
+                catch (InvalidOperationException)
+                {
+                    Debug.WriteLine("Channel > Connection closed. Arduino USB cable removed?");
+                    break;
+                }
                 catch (Exception ex)
                 {
                     Debug.WriteLine("Channel > Exception while receiving data!");
                 }
+
+                await Task.Delay(10);
             }
 
             //reset close flag
@@ -77,11 +99,10 @@ namespace ArduinoProject1
         private void ProcessReceivedMessage(ArduinoMessage message)
         {
             LogMessage(message);
-            var pendingResp = _messageQueue.Peek();
-            if (message.Command == pendingResp.ExceptedResponseCommand || message.Command == Command.NACK)
+            if (_messageQueue.Count > 0 && message.Command == _messageQueue.Peek().ExceptedResponseCommand || message.Command == Command.NACK)
             {
-                _messageQueue.Dequeue();
-                pendingResp.Action(message);
+                var msg = _messageQueue.Dequeue();
+                msg.Action(message);
             }
             else if (MessageReceived != null)
             {
@@ -104,12 +125,12 @@ namespace ArduinoProject1
 
         public Task<ArduinoMessage> SendMessageAsync(Command cmd, Parameter param)
         {
-            return SendMessageAsync(new ArduinoMessage(cmd, new short[] { (short)param }, DataFormat.PARAMETER));
+            return SendMessageAsync(new ArduinoMessage(cmd, new short[] { (short)param }, DataFormat.PARAM));
         }
 
         public Task<ArduinoMessage> SendMessageAsync(Command cmd, Parameter param, float value)
         {
-            return SendMessageAsync(new ArduinoMessage(cmd, DataPackage.ToValueArray(param, value), DataFormat.PARAMETER_AND_VALUE));
+            return SendMessageAsync(new ArduinoMessage(cmd, DataPackage.ToValueArray(param, value), DataFormat.PARAM_VAL));
         }
 
         public Task<ArduinoMessage> SendMessageAsync(ArduinoMessage msg)

@@ -209,10 +209,10 @@ namespace ArduinoProject1.ViewModels
                         CurrentAccX = DataPackage.GetValue(message);
                         break;
                     case Command.RESP_Y:
-                        CurrentAccX = DataPackage.GetValue(message);
+                        CurrentAccY = DataPackage.GetValue(message);
                         break;
                     case Command.RESP_Z:
-                        CurrentAccX = DataPackage.GetValue(message);
+                        CurrentAccZ = DataPackage.GetValue(message);
                         break;
                     case Command.ALARM_TEMP:
                     case Command.ALARM_X:
@@ -278,14 +278,14 @@ namespace ArduinoProject1.ViewModels
 
         public async void GetCurrentAccY()
         {
-            var res = await _channel.SendMessageAsync(Command.REQ_X);
-            CurrentAccX = DataPackage.GetValue(res);
+            var res = await _channel.SendMessageAsync(Command.REQ_Y);
+            CurrentAccY = DataPackage.GetValue(res);
         }
 
         public async void GetCurrentAccZ()
         {
-            var res = await _channel.SendMessageAsync(Command.REQ_X);
-            CurrentAccX = DataPackage.GetValue(res);
+            var res = await _channel.SendMessageAsync(Command.REQ_Z);
+            CurrentAccZ = DataPackage.GetValue(res);
         }
 
         public async void GetMaxAccX()

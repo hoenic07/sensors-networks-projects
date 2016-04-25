@@ -66,10 +66,10 @@ namespace ArduinoProject1
 
     public enum DataFormat
     {
-        NO_DATA = 0,
-        VALUE = 1, // e.g. RESP_TEMP
-        PARAMETER =2, // REQ_PARA
-        PARAMETER_AND_VALUE = 3, // RES_PARA
+        EMPTY = 0,
+        VAL = 1, // e.g. RESP_TEMP
+        PARAM =2, // REQ_PARA
+        PARAM_VAL = 3, // RES_PARA
     }
 
 }

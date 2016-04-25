@@ -24,15 +24,15 @@ namespace ArduinoProject1
 
             switch (msg.Format)
             {
-                case DataFormat.NO_DATA:
+                case DataFormat.EMPTY:
                     break;
-                case DataFormat.VALUE:
+                case DataFormat.VAL:
                     Text += DataPackage.GetValue(msg);
                     break;
-                case DataFormat.PARAMETER:
+                case DataFormat.PARAM:
                     Text += (Parameter)msg.Data[0];
                     break;
-                case DataFormat.PARAMETER_AND_VALUE:
+                case DataFormat.PARAM_VAL:
                     var kv = DataPackage.GetKeyValuePackage(msg);
                     Text += kv.Parameter + " " + kv.Value;
                     break;

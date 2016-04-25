@@ -20,7 +20,7 @@ namespace ArduinoProject1
             :base()
         {
             Command = cmd;
-            Format = DataFormat.NO_DATA;
+            Format = DataFormat.EMPTY;
             Data = new short[0];
             Receiver = Receiver.SENSOR;
         }
