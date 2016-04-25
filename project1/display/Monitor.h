@@ -18,6 +18,7 @@ private:
   Bus* bus;
   Thermometer* thermometer;
   Parameters* parameters;
+  bool activeAlarms[4]={}; //0...TEMP_MIN, 1...TEMP_MAX, 2...TEMP_DT, 3...ACC
   Accelerometer *accelerometer;
 };
 
