@@ -13,6 +13,7 @@ private:
   double curTempDeg;
   int time=0;
   double lastSendDeltaTemp=20;
+  double calibrationDiff = 0;
 public:
   Thermometer(Display* d, Parameters* p);
   ~Thermometer();
@@ -20,6 +21,7 @@ public:
   void updateTemperature();
   void sendPeriodically();
   double getTemperature();
+  void setCalibrationTemp(double tempDeg);
 };
 
 
