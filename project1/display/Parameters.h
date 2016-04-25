@@ -1,30 +1,61 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
+enum Parameter
+{
+  UPPER_TEMP_THRESHOLD,
+  LOWER_TEMP_THRESHOLD,
+  TEMP_PER_TIME_THRESHOLD,
+  TOTAL_ACC_THRESHOLD,
+  MAX_TEMP,
+  MIN_TEMP,
+  MAX_ACC_X,
+  MAX_ACC_Y,
+  MAX_ACC_Z,
+  TEMP_UPDATE_INTERVAL,
+  TEMP_UPDATE_DELTA,
+  CALIBRATION_TEMP,
+  CALIBRATION_MIN_X,
+  CALIBRATION_MAX_X,
+  CALIBRATION_MIN_Y,
+  CALIBRATION_MAX_Y,
+  CALIBRATION_MIN_Z,
+  CALIBRATION_MAX_Z 
+};
+
 class Parameters { 
 public:
-  double UPPER_TEMP_THRESHOLD = 0;
-  double LOWER_TEMP_THRESHOLD = 0;
-  double TEMP_PER_TIME_THRESHOLD = 0;
-  double TOTAL_ACC_THRESHOLD = 0;
-  double MAX_TEMP = 0;
-  double MIN_TEMP = 0;
-  double MAX_ACC_X = 0;
-  double MAX_ACC_Y = 0;
-  double MAX_ACC_Z = 0;
-  double TEMP_UPDATE_INTERVAL = 0;
-  double TEMP_UPDATE_DELTA = 0;
-  double CALIBRATION_TEMP = 0;
-  double CALIBRATION_MIN_X = 0;
-  double CALIBRATION_MAX_X = 0;
-  double CALIBRATION_MIN_Y = 0;
-  double CALIBRATION_MAX_Y = 0;
-  double CALIBRATION_MIN_Z = 0;
-  double CALIBRATION_MAX_Z = 0;
+  double v[30];
   
   void setDefaultValues(){
-      //TODO: Set correct default values here;
+      v[UPPER_TEMP_THRESHOLD] = 30;
+      v[LOWER_TEMP_THRESHOLD] = 10;
+      v[TEMP_PER_TIME_THRESHOLD] = 5;
+      v[TOTAL_ACC_THRESHOLD] = 3;
+      v[MAX_TEMP] = 20;
+      v[MIN_TEMP] = 20;
+      v[MAX_ACC_X] = 0;
+      v[MAX_ACC_Y] = 0;
+      v[MAX_ACC_Z] = 0;
+      v[TEMP_UPDATE_INTERVAL] = 60;
+      v[TEMP_UPDATE_DELTA] = 3;
+      v[CALIBRATION_TEMP] = 0;
+      v[CALIBRATION_MIN_X] = 1;
+      v[CALIBRATION_MAX_X] = 1;
+      v[CALIBRATION_MIN_Y] = 1;
+      v[CALIBRATION_MAX_Y] = 1;
+      v[CALIBRATION_MIN_Z] = 1;
+      v[CALIBRATION_MAX_Z] = 1;
   }
+
+  void setValue(Parameter p, double value){
+    v[p]=value;
+  }
+
+  double getValue(Parameter p){
+    return v[p];
+  }
+  
 };
 
 #endif

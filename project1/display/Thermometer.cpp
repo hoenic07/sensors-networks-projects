@@ -2,9 +2,10 @@
 #include "Arduino.h"
 
 
-Thermometer::Thermometer(Display* d, Monitor* m){
+Thermometer::Thermometer(Display* d, Monitor* m, Parameters* p){
   display = d;
   monitor = m;
+  parameters = p;
   curTempDeg = -1;
 }
 
@@ -39,20 +40,36 @@ void Thermometer::updateTemperature(){
     temp = tempDeg1 - (tempDeg1 - tempDeg2)/(v2 - v1) * (tempValue - v1);
   }
   curTempDeg = temp;
-  
+
+  double maxT = parameters->getValue(MAX_TEMP);
+  double minT = parameters->getValue(MIN_TEMP);
+
+  if(temp>maxT){
+    parameters->setValue(MAX_TEMP,temp);
+  }
+  if(temp<minT){
+    parameters->setValue(MIN_TEMP,temp);
+  }
+
   display->setTemp(temp);
   monitor->updateTemperature(temp);
-
- 
-  
-  
-  //return temp;
 }
 
 void Thermometer::sendPeriodically(){
-  //double interval = Instance::parameters->TEMP_UPDATE_INTERVAL;
-  //double delta = Instance::parameters->TEMP_UPDATE_DELTA;
-  //TODO: Send if condition is true
+  double interval = parameters->getValue(TEMP_UPDATE_INTERVAL);
+  double delta = parameters->getValue(TEMP_UPDATE_DELTA);
+  
+  time++;
+  
+  if(time>=interval){
+    time=0;
+    //TODO: Send temp here
+  }
+
+  if(abs(lastSendDeltaTemp-curTempDeg)>delta){
+    lastSendDeltaTemp=curTempDeg;
+    //TODO: Send temp here
+  }
 }
 
 double Thermometer::getTemperature() {
