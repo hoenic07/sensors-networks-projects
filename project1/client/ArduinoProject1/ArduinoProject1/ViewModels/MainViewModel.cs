@@ -215,9 +215,7 @@ namespace ArduinoProject1.ViewModels
                         CurrentAccZ = DataPackage.GetValue(message);
                         break;
                     case Command.ALARM_TEMP:
-                    case Command.ALARM_X:
-                    case Command.ALARM_Y:
-                    case Command.ALARM_Z:
+                    case Command.ALARM_ACC:
                         MessageBox.Show("Alarm!! " + message.Command);
                         break;
                     default:

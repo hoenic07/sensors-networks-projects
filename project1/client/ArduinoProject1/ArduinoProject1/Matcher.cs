@@ -21,9 +21,7 @@ namespace ArduinoProject1
             {Command.REQ_THETA, Command.RESP_THETA },
             {Command.SET_PARA, Command.ACK },
             {Command.ALARM_TEMP, Command.ACK },
-            {Command.ALARM_X, Command.ACK },
-            {Command.ALARM_Y, Command.ACK },
-            {Command.ALARM_Z, Command.ACK },
+            {Command.ALARM_ACC, Command.ACK },
             {Command.RESET_MINMAX, Command.ACK },
         };
     }

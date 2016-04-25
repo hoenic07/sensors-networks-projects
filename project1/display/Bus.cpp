@@ -1,7 +1,5 @@
 #include "Bus.h"
 
-//TODO: Everything
-
 Bus::Bus(Thermometer* t, Accelerometer* a, Parameters* p){
   Serial.begin(9600);
   thermometer = t;

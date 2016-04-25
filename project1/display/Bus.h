@@ -41,9 +41,7 @@ enum Command : byte {
   RESP_PARA,
   SET_PARA,
   ALARM_TEMP,
-  ALARM_X,
-  ALARM_Y, //20
-  ALARM_Z,
+  ALARM_ACC, //20
   RESET_MINMAX,
   ACK,
   NACK,

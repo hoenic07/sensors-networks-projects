@@ -2,9 +2,8 @@
 #include "Arduino.h"
 
 
-Thermometer::Thermometer(Display* d, Monitor* m, Parameters* p){
+Thermometer::Thermometer(Display* d, Parameters* p){
   display = d;
-  monitor = m;
   parameters = p;
   curTempDeg = -1;
 }
@@ -52,7 +51,7 @@ void Thermometer::updateTemperature(){
   }
 
   display->setTemp(temp);
-  monitor->updateTemperature(temp);
+  //monitor->updateTemperature(temp);
 }
 
 void Thermometer::sendPeriodically(){
