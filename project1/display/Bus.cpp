@@ -113,6 +113,11 @@ void Bus::processReceivedMessage(BusMessage* msg) {
         double value = msg->data[1] / 100.0;
         parameters->setValue(p, value);
         sendMessage(ACK);
+
+        if(p == CALIBRATION_TEMP) {
+          thermometer->setCalibrationTemp(value);
+        }
+        
         break;
       }
       //default: no need to handle other cases

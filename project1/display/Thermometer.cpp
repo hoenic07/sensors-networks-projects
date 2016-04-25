@@ -16,6 +16,8 @@ void Thermometer::init(){
 }
 
 void Thermometer::updateTemperature(){
+  
+  
   int tempValue = analogRead(A0);
   int targetIndex = 0;
   for(int i=2; i < sizeof(refValues) / sizeof(refValues[0]); i+=2) {
@@ -50,8 +52,7 @@ void Thermometer::updateTemperature(){
     parameters->setValue(MIN_TEMP,temp);
   }
 
-  display->setTemp(temp);
-  //monitor->updateTemperature(temp);
+  display->setTemp(temp + calibrationDiff);
 }
 
 void Thermometer::sendPeriodically(){
@@ -74,6 +75,10 @@ void Thermometer::sendPeriodically(){
 }
 
 double Thermometer::getTemperature() {
-  return curTempDeg;
+  return curTempDeg + calibrationDiff;
+}
+
+void Thermometer::setCalibrationTemp(double tempDeg) {
+  calibrationDiff = tempDeg - curTempDeg;
 }
 
