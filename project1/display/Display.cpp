@@ -19,14 +19,13 @@ void Display::update(){
   showLine((Line)(curTopLine+1));
 }
 
-void Display::scroll(int lines){
+void Display::scroll(int newLine){
   
   int cLineNumber = (int)curTopLine;
-  if(lines<0 && cLineNumber==0 ||
-     lines>0 && cLineNumber==5) return;
+  if(newLine<0 && newLine>5) return;
 
   clearDisplay();
-  curTopLine = (Line)(curTopLine + lines);
+  curTopLine = (Line)(newLine);
 }
 
 void  Display::showCurrentTemp() {
@@ -53,7 +52,7 @@ void  Display::showMaxTemp() {
 }
 
 void Display::showAccX() {
-  double maxVal = (int)parameters->getValue(MAX_ACC_X);
+  double maxVal = parameters->getValue(MAX_ACC_X);
   double val = accelerometer->getX();
   lcd->print("X ");
   printFloat(val);
@@ -62,7 +61,7 @@ void Display::showAccX() {
 }
 
 void Display::showAccY() {
-  double maxVal = (int)parameters->getValue(MAX_ACC_Y);
+  double maxVal = parameters->getValue(MAX_ACC_Y);
   double val = accelerometer->getY();
   lcd->print("Y ");
   printFloat(val);
@@ -71,7 +70,7 @@ void Display::showAccY() {
 }
 
 void Display::showAccZ() {
-  double maxVal = (int)parameters->getValue(MAX_ACC_Z);
+  double maxVal = parameters->getValue(MAX_ACC_Z);
   double val = accelerometer->getZ();
   lcd->print("Z ");
   printFloat(val);

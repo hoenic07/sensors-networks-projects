@@ -21,7 +21,7 @@ public:
   Display(Parameters* p, Accelerometer* a);
   ~Display();
   void update();
-  void scroll(int lines);
+  void scroll(int newLine);
   void setTemp(int degrees);
 private:
   static const int LED_PIN = 2;
