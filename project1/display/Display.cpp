@@ -2,7 +2,7 @@
 Display::Display(Parameters* p, Accelerometer *a) {
   parameters=p;
   accelerometer=a;
-  curTopLine = CUR_TEMP;
+  curTopLine = (Line)0;
   lcd = new SoftwareSerial(0, 2);
   lcd->begin(9600);
   clearDisplay();
@@ -16,7 +16,7 @@ void Display::update(){
   lcdPosition(0,0);
   showLine(curTopLine);
   lcdPosition(1,0);
-  showLine((Line)(curTopLine + 1));
+  showLine((Line)(curTopLine+1));
 }
 
 void Display::scroll(int lines){

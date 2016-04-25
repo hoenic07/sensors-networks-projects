@@ -39,21 +39,21 @@ double Accelerometer::getPitch(){
   double x = getX();
   double y = getY();
   double z = getZ();
-  return atan(x/sqrt(y*y+z*z));
+  return atan(x/sqrt(y*y+z*z))*57.3; // 57.3 ~ 180/PI
 }
 
 double Accelerometer::getRoll(){
   double x = getX();
   double y = getY();
   double z = getZ();
-  return atan(y/sqrt(x*x+z*z));
+  return atan(y/sqrt(x*x+z*z))*57.3;
 }
 
 double Accelerometer::getTheta(){
   double x = getX();
   double y = getY();
   double z = getZ();
-  return atan(sqrt(y*y+x*x)/z);
+  return atan(sqrt(y*y+x*x)/z)*57.3;
 }
 
 double Accelerometer::voltToG(int volt, int axis){
