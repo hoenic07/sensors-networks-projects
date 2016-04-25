@@ -14,6 +14,10 @@ private:
   int time=0;
   double lastSendDeltaTemp=20;
   double calibrationDiff = 0;
+
+  int posRingBuf = 0;
+  double tempValues[10]{};
+  unsigned long timeValues[10]={};
 public:
   Thermometer(Display* d, Parameters* p);
   ~Thermometer();
