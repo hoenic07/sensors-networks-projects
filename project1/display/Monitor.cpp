@@ -39,11 +39,20 @@ void Monitor::updateAccelerometer() {
 
 void Monitor::updateTemperature() {
   int temp = thermometer->getTemperature();
+  double tempDiff = thermometer->getTempDiff();
+  
   double maxTemp = parameters->getValue(UPPER_TEMP_THRESHOLD);
   double minTemp = parameters->getValue(LOWER_TEMP_THRESHOLD);
   double dTThr = parameters->getValue(TEMP_PER_TIME_THRESHOLD);
 
-  //TODO: Check dT/dt threshold
+  if(temp < minTemp){
+    if(activeAlarms[0] == false){
+      activeAlarms[0] = true;
+      bus->sendMessage(ALARM_TEMP_MIN);
+    }
+  }else{
+    activeAlarms[0] = false;
+  }
   
   if(temp > maxTemp){
     if(activeAlarms[1] == false){
@@ -53,13 +62,14 @@ void Monitor::updateTemperature() {
   }else{
     activeAlarms[1] = false;
   }
-  if(temp < minTemp){
-    if(activeAlarms[0] == false){
-      activeAlarms[0] = true;
-      bus->sendMessage(ALARM_TEMP_MIN);
+  
+   if(tempDiff > dTThr){
+    if(activeAlarms[2] == false){
+      activeAlarms[2] = true;
+      bus->sendMessage(ALARM_TEMP_DT);
     }
   }else{
-    activeAlarms[0] = false;
+    activeAlarms[2] = false;
   }
 
   if(activeAlarms[0] || activeAlarms[1] || activeAlarms[2]){

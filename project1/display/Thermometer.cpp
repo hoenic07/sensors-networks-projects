@@ -78,7 +78,58 @@ double Thermometer::getTemperature() {
   return curTempDeg + calibrationDiff;
 }
 
+double Thermometer::getTempDiff() {
+  return tempDiff;
+}
+
 void Thermometer::setCalibrationTemp(double tempDeg) {
   calibrationDiff = tempDeg - curTempDeg;
 }
 
+void Thermometer::updateTimeDiff(){
+  timeValues[pos] = millis();
+  tempValues[pos] = curTempDeg;
+
+  long timeDiff = 0;
+  bool calculatedDiff = false;
+
+  int previousPos = pos;
+  int currentPos = previousPos - 1;
+
+  while (currentPos >= 0) {
+    timeDiff += timeValues[previousPos] - timeValues[currentPos];
+
+    if (timeDiff >= timeTms) {
+      tempDiff = tempValues[pos] - tempValues[currentPos];
+      calculatedDiff = true;
+      break;
+    }
+    previousPos--;
+    currentPos = previousPos - 1;
+  }
+
+  if (!calculatedDiff) {
+    if (timeValues[MAX_VALUES_TEMP_DIFF - 1] != 0) {
+
+      previousPos = 0;
+      currentPos = MAX_VALUES_TEMP_DIFF - 1;
+
+      while (currentPos > pos) {
+        timeDiff += timeValues[previousPos] - timeValues[currentPos];
+
+        if (timeDiff >= timeTms) {
+          tempDiff = tempValues[pos] - tempValues[currentPos];
+          calculatedDiff = true;
+          break;
+        }
+        previousPos = currentPos;
+        currentPos--;
+      }
+    }
+  }
+
+  pos++;
+  if (pos >= MAX_VALUES_TEMP_DIFF) {
+    pos = 0;
+  }
+}
