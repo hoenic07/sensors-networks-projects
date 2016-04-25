@@ -7,17 +7,24 @@ class Accelerometer {
 public:
   Accelerometer(Parameters* p);
   ~Accelerometer();
-    void init();
+  void init();
   double getX();
   double getY();
   double getZ();
   double getPitch();
   double getRoll();
   double getTheta();
+  void update();
 private:
   double voltToG(int volt, int axis);
   double getParameterForAxis(int minMax, int axis);
   Parameters* parameters;
+  double x;
+  double y;
+  double z;
+  double pitch;
+  double roll;
+  double theta;
 };
 
 #endif

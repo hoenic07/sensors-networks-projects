@@ -17,58 +17,58 @@ Accelerometer::~Accelerometer(){}
 void Accelerometer::init(){
 }
 
-//get acceleration on X-axis
-double Accelerometer::getX(){
+void Accelerometer::update(){
   int val = analogRead(ACC_X_PIN);
   double maxAcc = parameters->getValue(MAX_ACC_X);
-  double acc = voltToG(val,0);
-  if(acc>maxAcc){
-    parameters->setValue(MAX_ACC_X, acc);
+  x = voltToG(val,0);
+  if(x>maxAcc){
+    parameters->setValue(MAX_ACC_X, x);
   }
-  return acc;
+
+  val = analogRead(ACC_Y_PIN);
+  maxAcc = parameters->getValue(MAX_ACC_Y);
+  y = voltToG(val,1);
+  if(y>maxAcc){
+    parameters->setValue(MAX_ACC_Y, y);
+  }
+
+  val = analogRead(ACC_X_PIN);
+  maxAcc = parameters->getValue(MAX_ACC_X);
+  z = voltToG(val,0);
+  if(z>maxAcc){
+    parameters->setValue(MAX_ACC_X, z);
+  }
+
+  pitch=atan(x/sqrt(y*y+z*z))*57.3; // 57.3 ~ 180/PI
+  roll=atan(y/sqrt(x*x+z*z))*57.3;
+  theta=atan(sqrt(y*y+x*x)/z)*57.3;
+}
+
+//get acceleration on X-axis
+double Accelerometer::getX(){
+  return x;
 }
 
 //get acceleration on Y-axis
 double Accelerometer::getY(){
-  int val = analogRead(ACC_Y_PIN);
-  double maxAcc = parameters->getValue(MAX_ACC_Y);
-  double acc = voltToG(val,1);
-  if(acc>maxAcc){
-    parameters->setValue(MAX_ACC_Y, acc);
-  }
-  return acc;
+  return y;
 }
 
 //get acceleration on Z-axis
 double Accelerometer::getZ(){
-  int val = analogRead(ACC_Z_PIN);
-  double maxAcc = parameters->getValue(MAX_ACC_Z);
-  double acc = voltToG(val,2);
-  if(acc>maxAcc){
-    parameters->setValue(MAX_ACC_Z, acc);
-  }
-  return acc;
+  return z;
 }
 
 double Accelerometer::getPitch(){
-  double x = getX();
-  double y = getY();
-  double z = getZ();
-  return atan(x/sqrt(y*y+z*z))*57.3; // 57.3 ~ 180/PI
+  return pitch; 
 }
 
 double Accelerometer::getRoll(){
-  double x = getX();
-  double y = getY();
-  double z = getZ();
-  return atan(y/sqrt(x*x+z*z))*57.3;
+  return roll;
 }
 
 double Accelerometer::getTheta(){
-  double x = getX();
-  double y = getY();
-  double z = getZ();
-  return atan(sqrt(y*y+x*x)/z)*57.3;
+  return theta;
 }
 
 double Accelerometer::voltToG(int volt, int axis){

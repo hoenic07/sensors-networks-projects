@@ -32,6 +32,7 @@ void setup()
 void loop()
 {
   bus->receiveBytes();
+  accelerometer->update();
   thermometer->updateTemperature();
   thermometer->sendPeriodically();
   monitor->updateTemperature();
