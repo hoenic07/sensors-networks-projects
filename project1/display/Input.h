@@ -13,6 +13,8 @@ public:
 private:
   int btnPin;
   int pressCount=0;
+  int lastRotarySection=0;
+  const double ROTARY_SECTION_SIZE = 1024.0 / 6;
   bool isClosed=false;
   const int MIN_VALID_PRESS_COUNT=2;
   Display* display;

@@ -11,8 +11,10 @@ Input::~Input(){
 }
 
 void Input::checkInput(){
+
+  //button
   if(digitalRead(btnPin)==LOW){
-    //display->scroll(1);
+    parameters->setMinMaxDefaultValues();
     pressCount++;
   }
   else{
@@ -21,10 +23,12 @@ void Input::checkInput(){
     }
     pressCount=0;
   }
+
+  //rotary encoder
+  double volt=analogRead(A1);
+  int newSection = (int)(volt/ROTARY_SECTION_SIZE);
+  if(newSection != lastRotarySection){
+    lastRotarySection=newSection;
+    display->scroll(newSection);
+  }
 }
-
-
-void Input::rotaryEncoderChanged(){
-  //Instance::display->scroll(1); //TODO dhcnage correct number of lines
-}
-

@@ -20,19 +20,34 @@ void Accelerometer::init(){
 //get acceleration on X-axis
 double Accelerometer::getX(){
   int val = analogRead(ACC_X_PIN);
-  return voltToG(val,0);
+  double maxAcc = parameters->getValue(MAX_ACC_X);
+  double acc = voltToG(val,0);
+  if(acc>maxAcc){
+    parameters->setValue(MAX_ACC_X, acc);
+  }
+  return acc;
 }
 
 //get acceleration on Y-axis
 double Accelerometer::getY(){
   int val = analogRead(ACC_Y_PIN);
-  return voltToG(val,1);
+  double maxAcc = parameters->getValue(MAX_ACC_Y);
+  double acc = voltToG(val,1);
+  if(acc>maxAcc){
+    parameters->setValue(MAX_ACC_Y, acc);
+  }
+  return acc;
 }
 
 //get acceleration on Z-axis
 double Accelerometer::getZ(){
   int val = analogRead(ACC_Z_PIN);
-  return voltToG(val,2);
+  double maxAcc = parameters->getValue(MAX_ACC_Z);
+  double acc = voltToG(val,2);
+  if(acc>maxAcc){
+    parameters->setValue(MAX_ACC_Z, acc);
+  }
+  return acc;
 }
 
 double Accelerometer::getPitch(){
