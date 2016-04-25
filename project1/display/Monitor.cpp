@@ -45,5 +45,12 @@ void Monitor::updateTemperature() {
   else{
     led->off(Led::LED2);
   }
+
+  //I know it's not the best place for this, but better than nothing :P
+  bool shouldSendPeriodically = thermometer->shouldSendTemperature();
+  if(shouldSendPeriodically){
+    bus->sendMessage(RESP_TEMP,temp,VALUE);
+  }
+  
 }
 

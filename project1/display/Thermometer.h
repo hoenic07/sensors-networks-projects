@@ -4,7 +4,6 @@
 #include "Display.h"
 #include "Accelerometer.h"
 
-
 class Thermometer {
 private:
   Parameters* parameters;
@@ -19,7 +18,7 @@ public:
   ~Thermometer();
   void init();
   void updateTemperature();
-  void sendPeriodically();
+  bool shouldSendTemperature();
   double getTemperature();
   void setCalibrationTemp(double tempDeg);
 };

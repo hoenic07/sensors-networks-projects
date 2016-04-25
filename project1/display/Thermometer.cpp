@@ -15,9 +15,7 @@ Thermometer::~Thermometer(){
 void Thermometer::init(){
 }
 
-void Thermometer::updateTemperature(){
-  
-  
+void Thermometer::updateTemperature(){  
   int tempValue = analogRead(A0);
   int targetIndex = 0;
   for(int i=2; i < sizeof(refValues) / sizeof(refValues[0]); i+=2) {
@@ -55,23 +53,25 @@ void Thermometer::updateTemperature(){
   display->setTemp(temp + calibrationDiff);
 }
 
-void Thermometer::sendPeriodically(){
+bool Thermometer::shouldSendTemperature(){
   double interval = parameters->getValue(TEMP_UPDATE_INTERVAL);
   double delta = parameters->getValue(TEMP_UPDATE_DELTA);
 
-  int fq=10; // timer frequency
+  int fq=3; // timer frequency
   
   time++;
   
-  if(time>=interval*fq){
+  if(interval!=0&&time>=interval*fq){
     time=0;
-    //TODO: Send temp here
+    return true;
   }
 
-  if(abs(lastSendDeltaTemp-curTempDeg)>delta){
+  if(delta!=0&&abs(lastSendDeltaTemp-curTempDeg)>delta){
     lastSendDeltaTemp=curTempDeg;
-    //TODO: Send temp here
+    return false;
   }
+
+  return false;
 }
 
 double Thermometer::getTemperature() {

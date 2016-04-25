@@ -76,8 +76,4 @@ private:
   void processReceivedMessage(BusMessage* msg);
 };
 
-
-
-
-
 #endif

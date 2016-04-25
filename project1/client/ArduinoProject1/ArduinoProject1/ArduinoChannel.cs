@@ -137,6 +137,11 @@ namespace ArduinoProject1
         {
             LogMessage(msg);
 
+            if (!_port.IsOpen)
+            {
+                Open();
+            }
+
             var bytes = msg.ToBytes();
             _port.Write(bytes, 0, bytes.Length);
             

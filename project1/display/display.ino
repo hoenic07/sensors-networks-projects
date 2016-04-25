@@ -34,7 +34,6 @@ void loop()
   bus->receiveBytes();
   accelerometer->update();
   thermometer->updateTemperature();
-  thermometer->sendPeriodically();
   monitor->update();
   input->checkInput();
   display->update();
