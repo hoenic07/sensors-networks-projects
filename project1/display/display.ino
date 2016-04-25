@@ -21,6 +21,7 @@ void setup()
   parameters = new Parameters();
   parameters->setDefaultValues();
   led = new Led();
+  led->init();
   accelerometer = new Accelerometer(parameters);
   display = new Display(parameters,accelerometer);
   input = new Input(display, parameters);
