@@ -14,12 +14,11 @@ void Input::checkInput(){
 
   //button
   if(digitalRead(btnPin)==LOW){
-    parameters->setMinMaxDefaultValues();
     pressCount++;
   }
   else{
     if(pressCount>=MIN_VALID_PRESS_COUNT){
-      display->scroll(1);
+      parameters->setMinMaxDefaultValues();
     }
     pressCount=0;
   }

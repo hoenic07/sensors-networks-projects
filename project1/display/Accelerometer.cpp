@@ -32,11 +32,11 @@ void Accelerometer::update(){
     parameters->setValue(MAX_ACC_Y, y);
   }
 
-  val = analogRead(ACC_X_PIN);
-  maxAcc = parameters->getValue(MAX_ACC_X);
+  val = analogRead(ACC_Z_PIN);
+  maxAcc = parameters->getValue(MAX_ACC_Z);
   z = voltToG(val,0);
   if(z>maxAcc){
-    parameters->setValue(MAX_ACC_X, z);
+    parameters->setValue(MAX_ACC_Z, z);
   }
 
   pitch=atan(x/sqrt(y*y+z*z))*57.3; // 57.3 ~ 180/PI
@@ -74,7 +74,7 @@ double Accelerometer::getTheta(){
 double Accelerometer::voltToG(int volt, int axis){
   double minVal = getParameterForAxis(0,axis);
   double maxVal = getParameterForAxis(1,axis);
-  double g = map(volt, 662, 355, minVal*1000, maxVal*1000);
+  double g = map(volt, 667, 357, minVal*1000, maxVal*1000);
   return g / 1000;
 }
 

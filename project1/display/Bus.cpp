@@ -71,7 +71,6 @@ int Bus::readByte(){
 }
 
 void Bus::processReceivedMessage(BusMessage* msg) {
-  //TODO check if expected response command
 
   if(msg != NULL) {
     switch(msg->command) {
