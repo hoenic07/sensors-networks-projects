@@ -2,8 +2,7 @@
 #include "Arduino.h"
 
 
-Thermometer::Thermometer(Display* d, Parameters* p){
-  display = d;
+Thermometer::Thermometer(Parameters* p){
   parameters = p;
   curTempDeg = -1;
 }
@@ -49,8 +48,6 @@ void Thermometer::updateTemperature(){
   if(temp<minT){
     parameters->setValue(MIN_TEMP,temp);
   }
-
-  display->setTemp(temp + calibrationDiff);
 }
 
 bool Thermometer::shouldSendTemperature(){
