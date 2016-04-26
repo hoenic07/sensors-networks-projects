@@ -24,7 +24,7 @@
         </StackPanel>
 
         <!--Temperature-->
-        <GroupBox Header="Temperature" Grid.Row="1">
+        <GroupBox Header="Temperature" Grid.Row="1" IsEnabled="{Binding IsConnected}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -52,7 +52,7 @@
         </GroupBox>
 
         <!--Acceleration-->
-        <GroupBox Header="Acceleration" Grid.Row="2">
+        <GroupBox Header="Acceleration" Grid.Row="2" IsEnabled="{Binding IsConnected}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -91,7 +91,7 @@
         </GroupBox>
         
         <!--Automatic Update-->
-        <GroupBox Header="Automatic update" Grid.Row="3">
+        <GroupBox Header="Automatic update" Grid.Row="3" IsEnabled="{Binding IsConnected}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
@@ -116,7 +116,7 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Header="Calibration" Grid.Row="4">
+        <GroupBox Header="Calibration" Grid.Row="4" IsEnabled="{Binding IsConnected}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -138,7 +138,7 @@
         </GroupBox>
         
         <!--Log and Thresholds-->
-        <Grid Grid.Row="5">
+        <Grid Grid.Row="5" IsEnabled="{Binding IsConnected}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>

@@ -21,6 +21,15 @@ namespace ArduinoProject1.ViewModels
 
         public ObservableCollection<LogEntry> LogEntries { get; set; }
 
+        private bool _isConnected;
+
+        public bool IsConnected
+        {
+            get { return _isConnected; }
+            set { _isConnected = value; NotifyOfPropertyChange(); }
+        }
+
+
         private double _currentTemperatur;
 
         public double CurrentTemperature
@@ -233,16 +242,17 @@ namespace ArduinoProject1.ViewModels
 
         public async void Connect()
         {
-            _channel.Open();
             var res = await _channel.SendMessageAsync(Command.REQ_ACK);
             if (res.Command == Command.ACK)
             {
+                IsConnected = true;
                 MessageBox.Show("Connected!");
             }
         }
 
         public void Disconnect()
         {
+            IsConnected = false;
             _channel.Close();
         }
 

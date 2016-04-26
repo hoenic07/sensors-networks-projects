@@ -38,6 +38,7 @@ namespace ArduinoProject1
             catch(Exception ex)
             {
                 MessageBox.Show("Couldn't connect! Maybe the Arduino Serial Monitor is open?");
+                return;
             }
 
             //TODO handle the result in DataReceivedHandler or use a queue? state machine?
@@ -140,6 +141,7 @@ namespace ArduinoProject1
             if (!_port.IsOpen)
             {
                 Open();
+                return new Task<ArduinoMessage>(() => new ArduinoMessage());
             }
 
             var bytes = msg.ToBytes();
