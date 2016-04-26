@@ -23,9 +23,9 @@ void setup()
   led = new Led();
   led->init();
   accelerometer = new Accelerometer(parameters);
-  display = new Display(parameters,accelerometer);
+  display = new Display(parameters, accelerometer, thermometer);
   input = new Input(display, parameters);
-  thermometer = new Thermometer(display,parameters);
+  thermometer = new Thermometer(parameters);
   bus = new Bus(thermometer,accelerometer, parameters);
   monitor = new Monitor(led, parameters,bus, thermometer, accelerometer);
 }

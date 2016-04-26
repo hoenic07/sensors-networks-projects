@@ -1,7 +1,8 @@
 #include "Display.h"
-Display::Display(Parameters* p, Accelerometer *a) {
+Display::Display(Parameters* p, Accelerometer *a, Thermometer* t) {
   parameters=p;
   accelerometer=a;
+  thermometer = t;
   curTopLine = (Line)0;
   lcd = new SoftwareSerial(0, 2);
   lcd->begin(9600);
@@ -29,9 +30,10 @@ void Display::scroll(int newLine){
 }
 
 void  Display::showCurrentTemp() {
+  int tempDeg = thermometer->getTemperature();
   lcd->print("Temp ");
   lcd->print(tempDeg, DEC);
-  lcd->print((char)223); //TODO clear prev value if lower
+  lcd->print((char)223);
   lcd->print("C");
 }
 
@@ -122,10 +124,6 @@ void  Display::showLine(Line line){
       showPitchRoll();
       break;
   }
-}
-
-void Display::setTemp(int degrees) {
-  tempDeg = degrees;
 }
 
 void Display::clearDisplay(){
