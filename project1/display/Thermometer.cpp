@@ -65,7 +65,7 @@ bool Thermometer::shouldSendTemperature(){
 
   if(delta!=0&&abs(lastSendDeltaTemp-curTempDeg)>delta){
     lastSendDeltaTemp=curTempDeg;
-    return false;
+    return true;
   }
 
   return false;

@@ -140,7 +140,6 @@ namespace ArduinoProject1
 
             if (!_port.IsOpen)
             {
-                Open();
                 return new Task<ArduinoMessage>(() => new ArduinoMessage());
             }
 

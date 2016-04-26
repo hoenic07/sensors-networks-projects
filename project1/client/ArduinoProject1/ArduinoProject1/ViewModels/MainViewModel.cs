@@ -242,6 +242,7 @@ namespace ArduinoProject1.ViewModels
 
         public async void Connect()
         {
+            _channel.Open();
             var res = await _channel.SendMessageAsync(Command.REQ_ACK);
             if (res.Command == Command.ACK)
             {
@@ -367,7 +368,7 @@ namespace ArduinoProject1.ViewModels
         public async void SetThresholds()
         {
             await _channel.SendMessageAsync(Command.SET_PARA, Parameter.LOWER_TEMP_THRESHOLD, MinTempThreshold);
-            await _channel.SendMessageAsync(Command.SET_PARA, Parameter.UPPER_TEMP_THRESHOLD, MinTempThreshold);
+            await _channel.SendMessageAsync(Command.SET_PARA, Parameter.UPPER_TEMP_THRESHOLD, MaxTempThreshold);
             await _channel.SendMessageAsync(Command.SET_PARA, Parameter.TEMP_PER_TIME_THRESHOLD, DeltaTempThreshold);
             await _channel.SendMessageAsync(Command.SET_PARA, Parameter.TOTAL_ACC_THRESHOLD, TotalAccelerationThreshold);
         }

@@ -20,7 +20,7 @@ namespace ArduinoProject1
             var data = msg.Data;
             if (data == null || data.Length != 2) throw new ArgumentException("Input array must have exactly two values!");
             var para = (Parameter)data[0];
-            var value = (float)ShortToFloat(data[1]);
+            var value = ShortToFloat(data[1]);
             return new KeyValuePackage { Parameter = para, Value = value };
         }
 
@@ -44,6 +44,6 @@ namespace ArduinoProject1
     public class KeyValuePackage
     {
         public Parameter Parameter { get; set; }
-        public float Value { get; set; }
+        public double Value { get; set; }
     }
 }

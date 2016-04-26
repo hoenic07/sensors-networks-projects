@@ -13,7 +13,7 @@ private:
   double curTempDeg;
   double tempDiff;
   int time=0;
-  double lastSendDeltaTemp=20;
+  double lastSendDeltaTemp=0;
   double calibrationDiff = 0;
 
   int pos = 0;

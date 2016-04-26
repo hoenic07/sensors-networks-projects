@@ -190,7 +190,7 @@ void Bus::sendMessage(Command cmd, float value, DataFormat format) {
    msgToSend->dataFormat = format;
    msgToSend->receiver = BUS;
 
-   msgToSend->data[0] = (short)value*100;
+   msgToSend->data[0] = (short)(value*100);
 
    sendBusMessage(msgToSend);
 }
@@ -213,7 +213,7 @@ void Bus::sendMessage(Command cmd, Parameter param, float value, DataFormat form
    sendMessage->receiver = BUS;
 
    sendMessage->data[0] = param;
-   sendMessage->data[1] =(short)value*100;
+   sendMessage->data[1] =(short)(value*100);
 
    //to bytes
    sendBusMessage(sendMessage);
