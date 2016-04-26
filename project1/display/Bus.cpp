@@ -102,6 +102,21 @@ void Bus::processReceivedMessage(BusMessage* msg) {
         break;
       break;
       }
+      case REQ_PITCH: {
+        double pitch = accelerometer->getPitch();
+        sendMessage(RESP_PITCH, float(pitch), VALUE);
+        break;
+      }
+      case REQ_ROLL: {
+         double roll = accelerometer->getRoll();
+        sendMessage(RESP_ROLL, float(roll), VALUE);
+        break;
+      }
+      case REQ_THETA: {
+        double theta = accelerometer->getTheta();
+        sendMessage(RESP_THETA, float(theta), VALUE);
+        break;
+      }
       case REQ_PARA:{
         Parameter p = (Parameter)msg->data[0];
         double val = parameters->getValue(p);
@@ -118,6 +133,11 @@ void Bus::processReceivedMessage(BusMessage* msg) {
           thermometer->setCalibrationTemp(value);
         }
         
+        break;
+      }
+      case RESET_MINMAX: {
+        parameters->setMinMaxDefaultValues();
+        sendMessage(ACK);
         break;
       }
       //default: no need to handle other cases
