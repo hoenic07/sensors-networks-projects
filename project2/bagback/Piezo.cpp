@@ -13,11 +13,7 @@ void Piezo::init() {
 }
 
 void Piezo::setActivated(bool isActive) {
-  
-  digitalWrite(13, LOW);
   if(isActive) {
-    digitalWrite(13, 10);
-  }else{
-    digitalWrite(13, 0);
+    tone(13, 262, 10);
   }
 }
