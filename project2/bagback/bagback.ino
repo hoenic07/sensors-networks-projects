@@ -1,13 +1,14 @@
 #include "Thermometer.h"
 #include "Bus.h"
 #include "Light.h"
-
+#include "ContextSituation.h"
 
 Parameters* parameters;
 Thermometer* thermometer;
 Accelerometer* accelerometer;
 Light* light;
 Bus* bus;
+ContextSituation* contextSituation;
 
 void setup() {
   Serial.begin(9600);
@@ -18,6 +19,7 @@ void setup() {
   accelerometer = new Accelerometer(parameters);
   thermometer = new Thermometer(parameters);
   light = new Light();
+  contextSituation = new ContextSituation();
 }
 
 void loop() {
@@ -32,8 +34,15 @@ void loop() {
   double z = accelerometer->getZ();
   double totalAcc = accelerometer->getTotalAcceleration();
 
+  contextSituation->setAcc(x, y,z);
+
   double temp = thermometer->getTemperature();
+  contextSituation->setTemperature(temp);
   double lumen= light->getLumen();
+  contextSituation->setLumen(lumen);
+
+  contextSituation->update();
+  
 
   Serial.print(millis());
   Serial.print(";");
@@ -49,5 +58,5 @@ void loop() {
   Serial.print(";");
   Serial.println(lumen);
 
-delay(500);
+  delay(50);
 }
