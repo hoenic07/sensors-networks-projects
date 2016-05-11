@@ -4,6 +4,13 @@
 ContextSituation::ContextSituation(){
   piezo = new Piezo();
   piezo->init();
+
+  standingLed = new Led(LED_ID_STANDING);
+  standingLed->init();
+  walkingLed = new Led(LED_ID_WALKING);
+  walkingLed->init();
+  runningLed = new Led(LED_ID_RUNNING);
+  runningLed->init();
 }
 
 ContextSituation::~ContextSituation() {
@@ -16,14 +23,19 @@ void ContextSituation::update() {
     piezo->setActivated(false);
   }
 
+  runningLed->setActive(false);
+  walkingLed->setActive(false);
+  standingLed->setActive(false);
+
   if(windowedAcceleration > 1){
-    Serial.println("Running");
+  	runningLed->setActive(true);
   }
   else if(windowedAcceleration > 0.1){
-    Serial.println("Walking");
+  	walkingLed->setActive(true);
   }
   else{
     Serial.println("Standing");
+  	standingLed->setActive(true);
   }
   
 }
