@@ -4,6 +4,13 @@
 ContextSituation::ContextSituation(){
   piezo = new Piezo();
   piezo->init();
+
+  standingLed = new Led(LED_ID_STANDING);
+  standingLed->init();
+  walkingLed = new Led(LED_ID_WALKING);
+  walkingLed->init();
+  runningLed = new Led(LED_ID_RUNNING);
+  runningLed->init();
 }
 
 ContextSituation::~ContextSituation() {
@@ -15,6 +22,10 @@ void ContextSituation::update() {
   }else{
     piezo->setActivated(false);
   }
+
+  runningLed->setActive(false);
+  walkingLed->setActive(true);
+  standingLed->setActive(false);
 }
 
 void ContextSituation::setAcc(double x, double y, double z){

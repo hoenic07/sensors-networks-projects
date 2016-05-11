@@ -2,6 +2,7 @@
 #define CONTEXTSITUATION_H
 
 #include "Piezo.h"
+#include "Led.h"
 
 class ContextSituation { 
 public:
@@ -18,7 +19,13 @@ private:
   double temp;
   double lumen;
   Piezo* piezo;
+  Led* standingLed;
+  Led* walkingLed;
+  Led* runningLed;
   const int THRESHOLD_OPEN = 500;
+  const int LED_ID_STANDING = 12;
+  const int LED_ID_WALKING = 11;
+  const int LED_ID_RUNNING = 10;
 };
 
 #endif
