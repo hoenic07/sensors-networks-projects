@@ -22,12 +22,12 @@ private:
   Led* standingLed;
   Led* walkingLed;
   Led* runningLed;
-  const int THRESHOLD_OPEN = 500;
+  const int THRESHOLD_OPEN = 40;
   const int LED_ID_STANDING = 12;
   const int LED_ID_WALKING = 11;
   const int LED_ID_RUNNING = 10;
-  const int RINGBUFFER_SIZE=20*2;
-  double totalAccRingBuffer[RINGBUFFER_SIZE];
+  const int RINGBUFFER_SIZE = 40;
+  double totalAccRingBuffer[40];
   int ringBufferPos=0;
   double ringBufferSum=0;
   double windowedAcceleration=0;

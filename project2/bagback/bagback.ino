@@ -49,7 +49,7 @@ void loop() {
   }
   else cntProcess++;
 
-  if(true){
+  if(false){
     Serial.println(millisBegin);
     /*Serial.print(";");
     Serial.print(x);
