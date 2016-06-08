@@ -3,6 +3,7 @@
 
 ContextSituation::ContextSituation(){
   piezo = new Piezo();
+  accAnalyzer = new AccelerometerAnalyzer();
   piezo->init();
 
   standingLed = new Led(LED_ID_STANDING);
@@ -22,17 +23,15 @@ void ContextSituation::update() {
   }else{
     piezo->setActivated(false);
   }
-
-  Serial.println(windowedAcceleration);
-
+  
   runningLed->setActive(false);
   walkingLed->setActive(false);
   standingLed->setActive(false);
 
-  if(windowedAcceleration > 1){
+  if(accAnalyzer->getState() == 0){
   	runningLed->setActive(true);
   }
-  else if(windowedAcceleration > 0.1){
+  else if(accAnalyzer->getState() == 1){
   	walkingLed->setActive(true);
   }
   else{
@@ -44,13 +43,8 @@ void ContextSituation::setAcc(double x, double y, double z){
   accX = x;
   accY = y;
   accZ = z;
-
-  double totalAcc = (x*x+y*y+z*z - 1); // calc total acceleration
-  ringBufferSum += totalAcc; // add the new acceleration to the sum
-  ringBufferSum -= totalAccRingBuffer[ringBufferPos]; // remove the old acceleration from the sum
-  totalAccRingBuffer[ringBufferPos]=totalAcc; // add to correct position
-  ringBufferPos = (ringBufferPos+1)%RINGBUFFER_SIZE;  // set the index position of the next element
-  windowedAcceleration=ringBufferSum / RINGBUFFER_SIZE; // calculate the average acceleration
+  double totalAcc = sqrt(x*x+y*y+z*z); // calc total acceleration
+  accAnalyzer->update(totalAcc);
 }
 void ContextSituation::setTemperature(double t){
   temp = t;

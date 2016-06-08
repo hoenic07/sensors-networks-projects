@@ -3,6 +3,7 @@
 
 #include "Piezo.h"
 #include "Led.h"
+#include "AccelerometerAnalyzer.h"
 
 class ContextSituation { 
 public:
@@ -22,6 +23,7 @@ private:
   Led* standingLed;
   Led* walkingLed;
   Led* runningLed;
+  AccelerometerAnalyzer* accAnalyzer;
   const int THRESHOLD_OPEN = 40;
   const int LED_ID_STANDING = 12;
   const int LED_ID_WALKING = 11;

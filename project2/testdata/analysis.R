@@ -1,28 +1,26 @@
-library(caret)
-
 accAll <- read.csv("walking_running_niklas_20hz.csv", sep=";", dec=",")
 str(accAll)
 
+# 1. Remove earth gravity ----
 accAll$acc <- accAll$acc - 1 # - 9.81m/s^2
 
 acc <- accAll$acc
-accAll$max <- -100
-accAll$min <- 100
-isStep = 0
 
-freq<-20
-
-v <- seq(1,length(acc)-freq,freq)
-
+# 2. Smooth raw data ----
 accAll$sAcc <- acc;
-for(i in 6:(length(acc)-6))
+for(i in 3:(length(acc)-3))
 {
   accAll$sAcc[i] <- sum(acc[(i-2):(i+2)])
 }
 
-plot(accAll$sAcc, type="o", pch='.') 
-
 acc <- accAll$sAcc
+
+# 3. Calculate Min + Max over Window to get threshold ----
+accAll$max <- -100
+accAll$min <- 100
+
+freq<-20
+v <- seq(1,length(acc)-freq,freq)
 
 for(i in v)
 {
@@ -32,6 +30,8 @@ for(i in v)
   accAll$max[rng] <- maxV*1
   accAll$min[rng] <- minV*1
 }
+
+# 4. Actual Step detection ----
 
 sample_old <- 0
 sample_new <- -100
@@ -55,20 +55,8 @@ for(i in 1:length(acc)){
 
 accAll$isStep
 
-warnings()
-
-accAll$isStep
-
-accAll$sAcc
-
-plot(accAll$sAcc, type="o", pch='.') 
-#lines(accAll$sAcc, pch=".", col="orange")
-lines(accAll$max, pch=".", col="red")
-lines(accAll$min, pch=".", col="green")
-lines(accAll$isStep, type="p", col="blue")
-
-
-stepFreq = list()
+# 5. Calculate Step frequency ----
+stepFreq = array()
 f=0
 stepCount=0
 for(i in 1:length(accAll$isStep)){
@@ -82,11 +70,9 @@ for(i in 1:length(accAll$isStep)){
   }
 }
 
-accAll$Time
+stepFreq
 
-stepFreq <- unlist(stepFreq)
-
-plot(stepFreq, type="o")
+# 6. Filter Step frequency ----
 
 stepFreqF <- stepFreq;
 for(i in 3:(length(stepFreq)-3))
@@ -96,4 +82,12 @@ for(i in 3:(length(stepFreq)-3))
 
 stepFreqF
 
+# Plots ----
+
 plot(stepFreqF, type="o")
+
+plot(accAll$sAcc, type="o", pch='.') 
+#lines(accAll$sAcc, pch=".", col="orange")
+lines(accAll$max, pch=".", col="red")
+lines(accAll$min, pch=".", col="green")
+lines(accAll$isStep, type="p", col="blue")
