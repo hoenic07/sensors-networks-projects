@@ -31,7 +31,6 @@ private:
   
   const int THRESHOLD_OPEN = 500;
   AccelerometerAnalyzer* accAnalyzer;
-  const int THRESHOLD_OPEN = 40;
   const int LED_ID_STANDING = 7;
   const int LED_ID_WALKING = 6;
   const int LED_ID_RUNNING = 5;

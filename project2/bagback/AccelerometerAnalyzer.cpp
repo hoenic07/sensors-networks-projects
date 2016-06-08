@@ -51,15 +51,15 @@ void AccelerometerAnalyzer::update(double sample){
 
   Serial.print(sumSteps);
 
-  if(sumSteps < 2){
+  if(sumSteps < 3){
     state = 0;
     Serial.println(" Standing");
   }
-  else if(sumSteps < 8){
+  else if(sumSteps < 11){
     state  = 1;
     Serial.println(" Walking");
   }
-  else if(sumSteps >= 8){
+  else if(sumSteps >= 11){
     state = 2;
     Serial.println(" Running");
   }    
