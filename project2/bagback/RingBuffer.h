@@ -5,7 +5,6 @@
 
 class RingBuffer {
   public:
-   int showDebug=0;
    RingBuffer(int size){
     this->size=size;
     buffer = new int[size];
@@ -61,6 +60,18 @@ class RingBuffer {
 
    int getMax(){
     return max;
+   }
+
+   void clear(){
+    int i;
+    for(i=0;i<length;i++){
+      int idx = (currentPositionIndex+i)%size;
+      buffer[idx]=0;
+    }
+    sum=0;
+    length=0;
+    min=100;
+    max=-100;
    }
 
   private:

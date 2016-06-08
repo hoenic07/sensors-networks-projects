@@ -19,6 +19,7 @@ class AccelerometerAnalyzer {
    int sample_new=0;
    int sample_old=-64000;
 
+   long lastStepTime=0;
    int state = 0;
    
 };

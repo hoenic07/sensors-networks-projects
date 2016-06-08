@@ -32,10 +32,12 @@ void ContextSituation::update() {
   walkingLed->setActive(false);
   standingLed->setActive(false);
 
-  if(accAnalyzer->getState() == 0){
+  int state = accAnalyzer->getState();
+
+  if(state == 2){
   	runningLed->setActive(true);
   }
-  else if(accAnalyzer->getState() == 1){
+  else if(state == 1){
   	walkingLed->setActive(true);
   }
   else{
