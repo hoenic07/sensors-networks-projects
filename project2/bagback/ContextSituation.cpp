@@ -32,7 +32,10 @@ void ContextSituation::update() {
   walkingLed->setActive(false);
   standingLed->setActive(false);
 
+  // 0 = standing, 1 = walking, 2 = running
   int state = accAnalyzer->getState();
+
+  Serial.println(state);
 
   if(state == 2){
   	runningLed->setActive(true);
@@ -40,15 +43,12 @@ void ContextSituation::update() {
   else if(state == 1){
   	walkingLed->setActive(true);
   }
-  else{
+  else if(state==0){
   	standingLed->setActive(true);
   }
 }
 
 void ContextSituation::setAcc(double x, double y, double z){
-  accX = x;
-  accY = y;
-  accZ = z;
   double totalAcc = sqrt(x*x+y*y+z*z); // calc total acceleration
   accAnalyzer->update(totalAcc);
 }

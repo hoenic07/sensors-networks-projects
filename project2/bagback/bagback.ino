@@ -17,7 +17,7 @@ int cntProcess = 0;
 
 // Constants
 const int SAMPLE_FREQUENCY=20;
-const int PROCESS_FREQUENCY=10;
+const int PROCESS_FREQUENCY=5;
 
 void sampleTask();
 void processTask();

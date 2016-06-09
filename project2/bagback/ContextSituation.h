@@ -15,9 +15,6 @@ public:
   void setTemperature(double t);
   void setLumen(double l);
 private:
-  double accX;
-  double accY;
-  double accZ;
   double temp;
   double lumen;
   Piezo* piezo;
@@ -39,11 +36,6 @@ private:
   const int LED_ID_BLUE = 9;
 
   void applyDiscoMode(boolean active);
-  const int RINGBUFFER_SIZE = 40;
-  double totalAccRingBuffer[40];
-  int ringBufferPos=0;
-  double ringBufferSum=0;
-  double windowedAcceleration=0;
 };
 
 #endif
