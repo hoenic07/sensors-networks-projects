@@ -47,11 +47,12 @@ void loop() {
   }
 
   //control the period. remove the execution time
-  long sleepTime = samplePeriod - millis() - millisBegin;
+  long execTime= millis() - millisBegin;
+  long sleepTime = samplePeriod - execTime;
 
   // Check if deadline was met
   if(sleepTime < 0){
-    Serial.println("Deadline not met!");
+	Serial.println("Deadline not met!");
     sleepTime=0;
   }
   

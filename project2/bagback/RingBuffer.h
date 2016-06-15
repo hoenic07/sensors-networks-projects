@@ -63,6 +63,7 @@ class RingBuffer {
    }
 
    void clear(){
+    if(length==0)return;
     int i;
     for(i=0;i<length;i++){
       int idx = (currentPositionIndex+i)%size;
