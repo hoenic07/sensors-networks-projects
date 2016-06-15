@@ -1,14 +1,11 @@
-#include "Thermometer.h"
-#include "Bus.h"
 #include "Light.h"
 #include "ContextSituation.h"
+#include "Accelerometer.h"
 
 // Objects 
 Parameters* parameters;
-Thermometer* thermometer;
 Accelerometer* accelerometer;
 Light* light;
-Bus* bus;
 ContextSituation* contextSituation;
 
 // Variables
@@ -17,23 +14,22 @@ int cntProcess = 0;
 
 // Constants
 const int SAMPLE_FREQUENCY=20;
-const int PROCESS_FREQUENCY=5;
+const int PROCESS_FREQUENCY=2;
 
 void sampleTask();
 void processTask();
 
 void setup() {
   Serial.begin(9600);
-  // put your setup code here, to run once:
+
   parameters = new Parameters();
   parameters->setDefaultValues();
 
   accelerometer = new Accelerometer(parameters);
-  thermometer = new Thermometer(parameters);
   light = new Light();
   contextSituation = new ContextSituation();
 
-  samplePeriod = 1000/SAMPLE_FREQUENCY;
+  samplePeriod = 1000 / SAMPLE_FREQUENCY;
 }
 
 void loop() {
@@ -43,34 +39,18 @@ void loop() {
   sampleTask();
 
   // Process task
-  if(cntProcess == SAMPLE_FREQUENCY/PROCESS_FREQUENCY){
+  if(cntProcess == SAMPLE_FREQUENCY / PROCESS_FREQUENCY){
     cntProcess=0;
     processTask();
-  }
-  else cntProcess++;
-
-  if(false){
-    Serial.println(millisBegin);
-    /*Serial.print(";");
-    Serial.print(x);
-    Serial.print(";");
-    Serial.print(y);
-    Serial.print(";");
-    Serial.print(z);
-    Serial.print(";");
-    Serial.print(totalAcc);
-    Serial.print(";");
-    Serial.print(temp);
-    Serial.print(";");
-    Serial.println(lumen);*/
+  }else{
+    cntProcess++;
   }
 
   //control the period. remove the execution time
-  long sleepTime = samplePeriod - (millis()-millisBegin);
-  //Serial.println(sleepTime);
+  long sleepTime = samplePeriod - millis() - millisBegin;
 
   // Check if deadline was met
-  if(sleepTime<0){
+  if(sleepTime < 0){
     Serial.println("Deadline not met!");
     sleepTime=0;
   }
@@ -80,7 +60,6 @@ void loop() {
 
 void sampleTask(){
   accelerometer->update();
-  thermometer->updateTemperature();
   light->update();
 
   double x = accelerometer->getX();
@@ -90,8 +69,6 @@ void sampleTask(){
 
   contextSituation->setAcc(x, y,z);
 
-  double temp = thermometer->getTemperature();
-  contextSituation->setTemperature(temp);
   double lumen= light->getLumen();
   contextSituation->setLumen(lumen);
 }

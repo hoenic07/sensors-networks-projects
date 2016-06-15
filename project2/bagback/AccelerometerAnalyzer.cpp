@@ -3,7 +3,8 @@
 AccelerometerAnalyzer::AccelerometerAnalyzer(){
   rawBuffer = new RingBuffer(5);
   smoothedBuffer = new RingBuffer(50);
-  stepsWindow = new RingBuffer(4);
+  stepsWindow = new RingBuffer(100);
+  //stepsWindow->showDebug=1;
 }
 
 AccelerometerAnalyzer::~AccelerometerAnalyzer(){
@@ -41,46 +42,25 @@ void AccelerometerAnalyzer::update(double sample){
         }
   }
 
-  int lastStepTimeAgo=0;
-  int stepInsert = -1;
+  stepsWindow->add(isStep);
 
-  //Debug
-  if(isStep==1){
-    Serial.print(lastStepTime-sampleCount);
-    Serial.print(";");
-    Serial.println(smoothedSample);
-  }
-
-  // Step frequency
-  if(isStep==1 && lastStepTime != 0){
-    stepInsert = abs(lastStepTime-sampleCount);
-    lastStepTime=sampleCount;
-  }
-  else if(isStep==1&&lastStepTime==0){
-    lastStepTime=sampleCount;
-    stepInsert=lastStepTime;
-  }
-  else if(isStep==0){
-    lastStepTimeAgo = abs(lastStepTime-sampleCount);
-  }
-
-  //insert the stepTime into the window
-  if(stepInsert != -1){
-    if(stepInsert > 25) stepInsert = 25;
-    stepsWindow->add(stepInsert);
-  }
-  
   //sum of steps within last 10 seconds
-  int stepFreq = stepsWindow->getAverage(); 
+  int sumSteps = stepsWindow->getSum(); 
 
-  // 1 step = 1/20 sec
-  if(lastStepTimeAgo >= 25 || stepFreq == -1){
+  //Serial.print(sumSteps);
+
+  if(sumSteps < 2){
     state = 0;
-    stepsWindow->clear();
+    //Serial.println(" Standing");
   }
-  else if(stepFreq < 9) state = 2;
-  else if(stepFreq < 25) state  = 1;
-  else state = 0;
+  else if(sumSteps < 8){
+    state  = 1;
+    //Serial.println(" Walking");
+  }
+  else if(sumSteps >= 8){
+    state = 2;
+    //Serial.println(" Running");
+  }    
 }
 
 int AccelerometerAnalyzer::getState(){

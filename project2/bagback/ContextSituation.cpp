@@ -27,34 +27,38 @@ void ContextSituation::update() {
     piezo->setActivated(false);
     applyDiscoMode(false);
   }
- 
-  runningLed->setActive(false);
-  walkingLed->setActive(false);
-  standingLed->setActive(false);
 
-  // 0 = standing, 1 = walking, 2 = running
-  int state = accAnalyzer->getState();
+  //state = 0 -> standing
+  //state = 1 -> walking
+  //state = 2 -> running
 
-  Serial.println(state);
-
-  if(state == 2){
-  	runningLed->setActive(true);
-  }
-  else if(state == 1){
-  	walkingLed->setActive(true);
-  }
-  else if(state==0){
-  	standingLed->setActive(true);
+  switch(accAnalyzer->getState()){
+    case 0:
+      standingLed->setActive(true);
+      walkingLed->setActive(false);
+      runningLed->setActive(false);
+      break;
+    case 1:
+      standingLed->setActive(false);
+      walkingLed->setActive(true);
+      runningLed->setActive(false);
+      break;
+    case 2:
+      standingLed->setActive(false);
+      walkingLed->setActive(false);
+      runningLed->setActive(true);
+      break;
   }
 }
 
 void ContextSituation::setAcc(double x, double y, double z){
+  accX = x;
+  accY = y;
+  accZ = z;
   double totalAcc = sqrt(x*x+y*y+z*z); // calc total acceleration
   accAnalyzer->update(totalAcc);
 }
-void ContextSituation::setTemperature(double t){
-  temp = t;
-}
+
 void ContextSituation::setLumen(double l){
   lumen = l;
 }
